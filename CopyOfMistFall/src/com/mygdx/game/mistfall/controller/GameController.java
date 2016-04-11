@@ -10,8 +10,6 @@ import com.mygdx.game.mistfall.model.QuestCharter;
 
 public class GameController {
 
-	//Patrick ist eine dumme Hure
-	//Shimon nicht
 	
 	private List<Hero> heroes;
 	private int activeHero;
