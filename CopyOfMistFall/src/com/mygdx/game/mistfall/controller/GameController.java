@@ -7,7 +7,6 @@ import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.QuestCharter;
-import com.mygdx.game.mistfall.model.enums.EnemyType;
 
 public class GameController {
 
