@@ -1,8 +1,6 @@
 package com.mygdx.game.mistfall.controller;
 
-import java.awt.Point;
 import java.util.List;
-import java.util.Map;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.hero.Hero;

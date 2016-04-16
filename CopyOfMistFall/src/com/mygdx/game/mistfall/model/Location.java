@@ -1,7 +1,9 @@
 package com.mygdx.game.mistfall.model;
 
 import java.awt.Point;
+import java.util.LinkedList;
 
+import com.mygdx.game.mistfall.model.enums.LocationEffectUse;
 import com.mygdx.game.mistfall.model.enums.LocationStatus;
 import com.mygdx.game.mistfall.model.enums.LocationType;
 
@@ -13,6 +15,7 @@ public class Location {
 	private Point coordinates;
 	private LocationType locationType;
 	private LocationStatus locationStatus;
+	private LinkedList<LocationEffectUse> locationsEffectUse;
 	
 	
 	
@@ -62,6 +65,19 @@ public class Location {
 
 	public void setCoordinates(Point coordinates) {
 		this.coordinates = coordinates;
+	}
+
+	public LinkedList<LocationEffectUse> getLocationsEffectUse() {
+		return locationsEffectUse;
+	}
+
+	public void setLocationsEffectUse(LinkedList<LocationEffectUse> locationsEffectUse) {
+		this.locationsEffectUse = locationsEffectUse;
+	}
+
+	public void applyEffect() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

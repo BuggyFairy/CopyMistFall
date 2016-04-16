@@ -7,6 +7,7 @@ import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.QuestCharter;
+import com.mygdx.game.mistfall.model.enums.EnemyType;
 
 public class GameController {
 
@@ -210,6 +211,56 @@ public class GameController {
 		this.travelPhaseCompleted = travelPhaseCompleted;
 	}
 	
+
+	/**
+	 * Disperse all Enemies without the "Relentless" Ability from the Quest area and all Hero areas
+	 */
+	public void disperseEnemies(){
+		int i=0;
+		// Disperse Quest Area
+		while(i<questArea.getQuestAreaEnemies().size()){
+			if (questArea.getQuestAreaEnemies().get(i).getIsRelentless()==false){
+				switch (questArea.getQuestAreaEnemies().get(i).getEnemyType()){
+					case BLUE:
+						gameSetupController.getBlueEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
+					break;
+					case RED:
+						gameSetupController.getRedEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
+					break;
+					case GREEN:
+						gameSetupController.getGreenEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
+					break;
+				}
+				questArea.getQuestAreaEnemies().remove(i);	
+			}
+			else{
+				i++;
+			}
+		}
+		// Disperse Hero Area
+		for (int j=0;j<heroes.size();j++){
+			i=0;
+			while(i<heroes.get(j).getHeroEnemies().getCards().size()){
+				if (heroes.get(j).getHeroEnemies().getCards().get(i).getIsRelentless()==false){
+					switch (heroes.get(j).getHeroEnemies().getCards().get(i).getEnemyType()){
+						case BLUE:
+							gameSetupController.getBlueEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
+						break;
+						case RED:
+							gameSetupController.getRedEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
+						break;
+						case GREEN:
+							gameSetupController.getGreenEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
+						break;
+					}
+					heroes.get(j).getHeroEnemies().getCards().remove(i);	
+				}
+				else{
+					i++;
+				}
+			}
+		}
+	}
 	
 	
 	

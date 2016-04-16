@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
-import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
+import com.mygdx.game.mistfall.model.enums.LocationEffectUse;
 import com.mygdx.game.mistfall.model.enums.LocationStatus;
 
 
@@ -54,15 +54,47 @@ public class TurnController {
 	public void travelPhase(GameController gc){
 		
 
-		
-		Location selectedLocation = gc.getViewController().getSelectedLocation();
-		
-		if(gc.getViewController().confirmScout()){
+		while (gc.getViewController().getConfirmRelocation()==false || gc.getViewController().getSkipRelocation()==false){
+			// Wait for User Input
 			
-			gc.getGameSetupController().getLocationGrid().getLocationAt(selectedLocation.getCoordinates()).setRevealed(true);;
-//			gc.getGameSetupController().setResolvePool(gc.);
+			Location selectedLocation = gc.getViewController().getSelectedLocation();
+			
+			// Scout Chosen Location
+			if(gc.getViewController().getScoutConfirmed()){
+				gc.getGameSetupController().getLocationGrid().getLocationAt(selectedLocation.getCoordinates()).setRevealed(true);
+				gc.getGameSetupController().getLocationGrid().getLocationAt(selectedLocation.getCoordinates()).setLocationStatus(LocationStatus.PERILOUS);
+				gc.getGameSetupController().setResolvePool(gc.getGameSetupController().getResolvePool()-1);
+				gc.getViewController().setScoutConfirmed(false);
+			}
 		}
 		
+		// Relocation Confirmed, proceeding with Entering New Location
+		if (gc.getViewController().getConfirmRelocation()){
+			
+			// Check for active Encounter of the "old" position and applying retreat penalty and discard
+			if (gc.getActiveEncounter()!=null){
+				gc.getActiveEncounter().retreatPenalty();
+				gc.getGameSetupController().getEncountersDiscard().add(gc.getActiveEncounter());
+				gc.setActiveEncounter(null);
+			}
+			
+			// reveal new Location if unrevealed
+			if (gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).isRevealed()==false){
+				gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).setRevealed(true);
+				gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).setLocationStatus(LocationStatus.PERILOUS);
+			}
+			
+			// Disperse enemy's in Quest and Hero areas
+			gc.disperseEnemies();
+			
+			// Relocate Party to the new Location
+			gc.setActiveLovation(gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()));
+			
+			//Apply Location effects
+			if (gc.getActiveLovation().getLocationsEffectUse().contains(LocationEffectUse.ENTER_NEW_LOCATION)){
+				gc.getActiveLovation().applyEffect();
+			}
+		}	
 	}
 	
 	public void pursuitPhase(){

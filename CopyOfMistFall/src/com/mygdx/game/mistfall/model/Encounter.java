@@ -51,6 +51,10 @@ public class Encounter extends Card{
 	public void setLocationTypes(List<LocationType> locationTypes) {
 		this.locationTypes = locationTypes;
 	}
+	public void retreatPenalty() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

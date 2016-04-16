@@ -12,8 +12,6 @@ public class Enemy extends Card {
 	
 	private EnemyType enemyType;
 	private AttackType attackType;
-//	private EnemyKeyword enemyKeyword;
-//	private Vunerability vunerability;
 	private LinkedList<EnemyKeyword> enemyKeyword;
 	private LinkedList<Vulnerability> vulnerability;
 	private int attackValue;
@@ -23,6 +21,7 @@ public class Enemy extends Card {
 	private int resolve;
 	private boolean specialEnemy;
 	private boolean wasActivated;
+	private boolean isRelentless;
 	
 	
 	
@@ -61,28 +60,6 @@ public class Enemy extends Card {
 	public void setAttackType(AttackType attackType) {
 		this.attackType = attackType;
 	}
-	
-	
-	
-	
-//	public EnemyKeyword getEnemyKeyword() {
-//		return enemyKeyword;
-//	}
-//	public void setEnemyKeyword(EnemyKeyword enemyKeyword) {
-//		this.enemyKeyword = enemyKeyword;
-//	}
-//	public Vunerability getVunerability() {
-//		return vunerability;
-//	}
-//	public void setVunerability(Vunerability vunerability) {
-//		this.vunerability = vunerability;
-//	}
-	
-	
-	
-	
-	
-	
 	public int getAttackValue() {
 		return attackValue;
 	}
@@ -119,6 +96,18 @@ public class Enemy extends Card {
 	public void setSpecialEnemy(boolean specialEnemy) {
 		this.specialEnemy = specialEnemy;
 	}
+	public boolean wasActivated() {
+		return wasActivated;
+	}
+	public void setWasActivated(boolean activated) {
+		this.wasActivated = activated;
+	}
+	public boolean getIsRelentless() {
+		return isRelentless;
+	}
+	public void setIsRelentless(boolean isRelentless) {
+		this.isRelentless = isRelentless;
+	}
 	
 	public String toString(){
 		String text;
@@ -132,12 +121,7 @@ public class Enemy extends Card {
 				"\nVunerabilities: "+getVunerability().toString();
 		return text;
 	}
-	public boolean wasActivated() {
-		return wasActivated;
-	}
-	public void setWasActivated(boolean activated) {
-		this.wasActivated = activated;
-	}
+
 	
 	
 }
