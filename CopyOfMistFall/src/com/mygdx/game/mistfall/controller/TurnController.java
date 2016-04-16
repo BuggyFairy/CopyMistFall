@@ -76,9 +76,14 @@ public class TurnController {
 			gc.setActiveLovation(gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()));		
 		}	
 		
-		// Check for Encounter draw and draw new Encounter
+		// Check for Encounter and draw new Encounter if there is none
 		if (gc.getActiveEncounter()==null && gc.getActiveLovation().getLocationStatus()!=LocationStatus.SAFE){
+			// draw encounter
 			drawEncounter(gc);
+			//Apply Location effects
+			if (gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getActiveLovation().getCoordinates()).getLocationsEffectUse().contains(LocationEffectUse.DRAW_NEW_ENCOUNTER)){
+				gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getActiveLovation().getCoordinates()).applyEffect();
+			}
 		}
 		// Setup Encounter
 		if (gc.getActiveEncounter()!=null){
@@ -89,8 +94,53 @@ public class TurnController {
 		}
 	}
 	
-	public void pursuitPhase(){
+	public void pursuitPhase(GameController gc){
 		
+		List<Hero> heroesWithHighestFocus = new LinkedList<Hero>();
+		int highestFocusValue=0;
+		boolean heroWithFocusLeft=true;
+		
+		// Run as long as there are Enemies left in the Questing Area and at least 1 hero has a focus >0
+		while (gc.getQuestArea().getQuestAreaEnemies().size()>0 && heroWithFocusLeft==true){ 
+			// Clear List
+			heroesWithHighestFocus.clear();
+			// Get highest Focus Value among all heroes
+			for(Hero h:gc.getHeroes()){
+				if (h.getFocus()>highestFocusValue){
+					highestFocusValue=h.getFocus();
+				}
+			}
+			// Add all heroes with the highest focus Value to a List if its > 0
+			if (highestFocusValue>0){
+				for(Hero h:gc.getHeroes()){
+					if (h.getFocus()==highestFocusValue){
+						heroesWithHighestFocus.add(h);
+					}
+				}
+			}
+			// If there is 1 hero in the List, the Enemy at the top of the list enter the hero's area
+			if (heroesWithHighestFocus.size()==1){
+				// Add Enemy from the top of the quest area list to the hero's area
+				gc.getHeroByName(heroesWithHighestFocus.get(0).getName()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
+				gc.getQuestArea().getQuestAreaEnemies().remove(0);
+				// Halve the Hero Focus
+				gc.getHeroByName(heroesWithHighestFocus.get(0).getName()).halveFocus();
+			}
+			// If there are 2 or more heroes in the list, the players must decide which hero will be pursuited by the enemy at the top of the list
+			else if (heroesWithHighestFocus.size()>1){
+				// Get Chosen Hero of the players
+				Hero selectedHero = PickHeroController.pickHero(heroesWithHighestFocus);
+				// Add Enemy from the top of the quest area list to the hero's area
+				gc.getHeroByName(selectedHero.getName()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
+				gc.getQuestArea().getQuestAreaEnemies().remove(0);
+				// Halve the Hero Focus
+				gc.getHeroByName(selectedHero.getName()).halveFocus();
+			}
+			// If there is no hero in the list the pursuitPhase ends
+			else{
+				heroWithFocusLeft=false;
+			}
+		}
 	}
 	
 	public void heroPhase(){
@@ -116,10 +166,7 @@ public class TurnController {
 				
 				while(localHeroEnemies.isEmpty() == false){
 					
-					activeEnemy = CardController.pickEnemyCard();
-					
-					
-					
+					activeEnemy = CardController.pickEnemyCard();		
 				}
 				
 				

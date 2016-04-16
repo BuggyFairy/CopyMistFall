@@ -261,6 +261,13 @@ public class GameController {
 		}
 	}
 	
-	
+	public Hero getHeroByName(String heroName){
+		for(int i=0;i<heroes.size();i++){
+			if (heroes.get(i).getName()==heroName){
+				return heroes.get(i);
+			}
+		}
+		return null;
+	}
 	
 }

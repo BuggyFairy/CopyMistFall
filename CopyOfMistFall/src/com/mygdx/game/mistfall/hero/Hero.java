@@ -112,6 +112,10 @@ public class Hero {
 		public void setActive(boolean isActive) {
 			this.isActive = isActive;
 		}
+		
+		public void halveFocus(){
+			focus=Math.floorDiv(focus, 2);
+		}
 
 		public String toString(){
 			String text = "";
