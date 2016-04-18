@@ -77,7 +77,7 @@ public class GameController {
 
 	
 	public void turn(){
-		turnController.defencePhase(heroes);
+		turnController.defencePhase(this);
 	}
 
 
@@ -259,15 +259,5 @@ public class GameController {
 				}
 			}
 		}
-	}
-	
-	public Hero getHeroByName(String heroName){
-		for(int i=0;i<heroes.size();i++){
-			if (heroes.get(i).getName()==heroName){
-				return heroes.get(i);
-			}
-		}
-		return null;
-	}
-	
+	}	
 }

@@ -16,12 +16,10 @@ public class BloodscorneVampire extends Enemy {
 		setEnemyType(EnemyType.RED);
 		setAttackType(AttackType.MAGICAL);
 		
-		setEnemyKeyword(new LinkedList<EnemyKeyword>());
 		appendEnemyKeyword(EnemyKeyword.SORCERER);
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		appendEnemyKeyword(EnemyKeyword.VAMPIRE);
 		
-		setVunerability(new LinkedList<Vulnerability>());
 		appendVunerability(Vulnerability.FLAME);
 		appendVunerability(Vulnerability.DIVINE);
 		setAttackValue(2);

@@ -1,6 +1,5 @@
 package com.mygdx.game.mistfall.hero;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.model.AbilityInformation;
@@ -19,6 +18,7 @@ public class HeroCard {
 	private List<GearKeyword> gearKeyword;
 	private HeroAreaRestriction areaRestriction;	
 	private List<AbilityInformation> abilityInformation;
+	private boolean countsAgainstDrawLimit;
 	
 	
 	public int getResolveCost() {
@@ -271,6 +271,12 @@ public class HeroCard {
 		}
 		
 		return text;
+	}
+	public boolean getCountsAgainstDrawLimit() {
+		return countsAgainstDrawLimit;
+	}
+	public void setCountsAgainstDrawLimit(boolean countsAgainstDrawLimit) {
+		this.countsAgainstDrawLimit = countsAgainstDrawLimit;
 	}
 
 	

@@ -14,6 +14,7 @@ public class Celenthia extends Hero{
 		setName("CELENTHIA THE ARCANE MAGE");
 		setFocus(BASEFOCUS);
 		setRestoration(1);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.STAFF);
 		getGearProficiencies().add(GearKeyword.WAND);

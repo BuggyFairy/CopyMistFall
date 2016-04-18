@@ -14,6 +14,7 @@ public class Fengray extends Hero{
 		setName("FENGRAY THE SHIELDBEARER");
 		setFocus(BASEFOCUS);
 		setRestoration(2);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.AXE);
 		getGearProficiencies().add(GearKeyword.HAMMER);

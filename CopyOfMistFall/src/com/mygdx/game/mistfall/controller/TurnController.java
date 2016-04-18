@@ -89,7 +89,7 @@ public class TurnController {
 		if (gc.getActiveEncounter()!=null){
 			// Spawn initial Enemies
 			spawnEnemies(gc,gc.getActiveEncounter().getInitialEnemyCount());
-			// Follow special setup rules
+			// Follow special setup rules of Encounter
 			// TODO: special setup rules
 		}
 	}
@@ -121,20 +121,20 @@ public class TurnController {
 			// If there is 1 hero in the List, the Enemy at the top of the list enter the hero's area
 			if (heroesWithHighestFocus.size()==1){
 				// Add Enemy from the top of the quest area list to the hero's area
-				gc.getHeroByName(heroesWithHighestFocus.get(0).getName()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
+				gc.getHeroes().get(heroesWithHighestFocus.get(0).getHeroID()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
 				gc.getQuestArea().getQuestAreaEnemies().remove(0);
 				// Halve the Hero Focus
-				gc.getHeroByName(heroesWithHighestFocus.get(0).getName()).halveFocus();
+				gc.getHeroes().get(heroesWithHighestFocus.get(0).getHeroID()).halveFocus();
 			}
 			// If there are 2 or more heroes in the list, the players must decide which hero will be pursuited by the enemy at the top of the list
 			else if (heroesWithHighestFocus.size()>1){
 				// Get Chosen Hero of the players
 				Hero selectedHero = PickHeroController.pickHero(heroesWithHighestFocus);
 				// Add Enemy from the top of the quest area list to the hero's area
-				gc.getHeroByName(selectedHero.getName()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
+				gc.getHeroes().get(selectedHero.getHeroID()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
 				gc.getQuestArea().getQuestAreaEnemies().remove(0);
 				// Halve the Hero Focus
-				gc.getHeroByName(selectedHero.getName()).halveFocus();
+				gc.getHeroes().get(selectedHero.getHeroID()).halveFocus();
 			}
 			// If there is no hero in the list the pursuitPhase ends
 			else{
@@ -143,39 +143,150 @@ public class TurnController {
 		}
 	}
 	
-	public void heroPhase(){
-		
+	public void heroPhase(GameController gc){
+		// Set List of Heroes who haven't done their hero turn
+		List<Hero> heroesWithTurnLeft = new LinkedList<Hero>();
+		heroesWithTurnLeft.addAll(gc.getHeroes());
+		// As long as there is a Hero left in the List, proceed with the heroPhase
+		while (heroesWithTurnLeft.isEmpty()==false){
+			// Get active Hero from the players and set the active hero ID
+			gc.setActiveHero(PickHeroController.pickHero(heroesWithTurnLeft).getHeroID());
+			
+			// Resolve "At the start of your Turn Abilities"
+			//TODO: s.o.
+			
+	
+			boolean heroTurnActive=true;
+			// Run the Hero turn until the player ends it
+			while (heroTurnActive==true){
+				//TODO: Herophase
+			}
+			
+			// Resolve "At the end of your Turn Abilities"
+			//TODO: s.o.
+			
+			// Draw Cards back to the draw limit
+			CardController.drawToDrawLimit(gc.getHeroes().get(gc.getActiveHero()));
+			// Remove Hero from List heroesWithTurnLeft
+			for (Hero h:heroesWithTurnLeft){
+				if (h.getHeroID()==gc.getActiveHero()){
+					heroesWithTurnLeft.remove(h);
+					break;
+				}
+			}
+			// Reset Active Hero
+			gc.setActiveHero(-1);
+		}
 	}
 	
-	public void defencePhase(List<Hero> heroes){
-		Hero activeHero;
-		Enemy activeEnemy;
+	public void defencePhase(GameController gc){
+		
 		List<Hero> heroesWithEnemies = new LinkedList<Hero>();
 		List<Enemy> localHeroEnemies = new LinkedList<Enemy>();
-
-			for(Hero h : heroes){
-				if(h.getHeroEnemies().getCards().isEmpty() == false){
+		Enemy activeEnemy;
+		
+		// Get all Heroes with Enemies in their Hero Area that are not slowed
+		for (Hero h : gc.getHeroes()){
+			// Add Hero if there are no enemies in the hero area
+			if (h.getHeroEnemies().getCards().isEmpty()){
+				heroesWithEnemies.add(h);
+			}
+			// Add Hero if all the enemies in the Area are slowed
+			else{
+				boolean addHero=true;
+				for (Enemy e : h.getHeroEnemies().getCards()){
+					if (e.isSlowed()==false){
+						addHero=false;
+						break;
+					}
+				}
+				if (addHero==true){
 					heroesWithEnemies.add(h);
 				}
 			}
-			while(heroesWithEnemies.isEmpty()==false){
-				localHeroEnemies.clear();
-				activeHero = PickHeroController.pickHero(heroesWithEnemies);
-				
-				localHeroEnemies.addAll(activeHero.getHeroEnemies().getCards());
-				
-				while(localHeroEnemies.isEmpty() == false){
-					
-					activeEnemy = CardController.pickEnemyCard();		
+		}
+		
+		// Runs until every Hero of "heroesWithEnemies" was activated once
+		while(heroesWithEnemies.isEmpty()==false){
+			
+			localHeroEnemies.clear();
+			
+			// Players choose which hero they want to activate; set active Hero
+			gc.setActiveHero(PickHeroController.pickHero(heroesWithEnemies).getHeroID());
+			
+			// Add all enemies that are not slowed to "localHeroEnemies" list
+			for (Enemy e : gc.getHeroes().get(gc.getActiveHero()).getHeroEnemies().getCards()){
+				if (e.isSlowed()==false){
+					localHeroEnemies.add(e);
 				}
+			}
+			
+			// Runs until every enemy of "localHeroEnemies" was activated once
+			while (localHeroEnemies.isEmpty()==false){
+				// Player activates a enemy in their hero area
+				activeEnemy = CardController.pickEnemyCard();
 				
+				// Enemy Attacks
+				//TODO: Enemy attack + Reflex
 				
-				heroesWithEnemies.remove(activeHero);
+				// Remove Enemy from the list after he was activated
+				localHeroEnemies.remove(activeEnemy);
+			}
+			
+			// Remove active Hero from list "localHeroEnemies"
+			localHeroEnemies.remove(gc.getHeroes().get(gc.getActiveHero()));
+			gc.setActiveHero(-1);		
 		}
 		
 		
+		// Resolve Conditions
+		List<Enemy> enemiesWithConditions = new LinkedList<Enemy>();
+		Enemy selectedEnemy;
+		// Check All Heroes
+		for (Hero h: gc.getHeroes()){
+			enemiesWithConditions.clear();
+			// Check all enemies of the current hero for conditions and add to list "enemiesWithConditions"
+			for (Enemy e: h.getHeroEnemies().getCards()){
+				if (e.getConditions().getConditionCount()>0){
+					enemiesWithConditions.add(e);
+				}
+			}
+			// Resolve enemy conditions if there are any
+			while (enemiesWithConditions.isEmpty()==false){
+				selectedEnemy=PickEnemyController.pickEnemy(enemiesWithConditions);
+				for (int i=1; i<=selectedEnemy.getConditions().getBurning();i++){
+					//gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards()
+				}
+			}
+		}
+		
 	}
 	
+//	public void defencePhase(List<Hero> heroes){
+//		Hero activeHero;
+//		Enemy activeEnemy;
+//		List<Hero> heroesWithEnemies = new LinkedList<Hero>();
+//		List<Enemy> localHeroEnemies = new LinkedList<Enemy>();
+//
+//			for(Hero h : heroes){
+//				if(h.getHeroEnemies().getCards().isEmpty() == false){
+//					heroesWithEnemies.add(h);
+//				}
+//			}
+//			while(heroesWithEnemies.isEmpty()==false){
+//				localHeroEnemies.clear();
+//				activeHero = PickHeroController.pickHero(heroesWithEnemies);
+//				
+//				localHeroEnemies.addAll(activeHero.getHeroEnemies().getCards());
+//				
+//				while(localHeroEnemies.isEmpty() == false){
+//					
+//					activeEnemy = CardController.pickEnemyCard();		
+//				}
+//				heroesWithEnemies.remove(activeHero);
+//		}
+//	}
+//	
 	public void encounterPhase(){
 		
 	}

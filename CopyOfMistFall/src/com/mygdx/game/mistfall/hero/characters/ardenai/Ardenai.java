@@ -14,6 +14,7 @@ public class Ardenai extends Hero{
 		setName("ARDENAI THE ARCANEWEAVE ARCHER");
 		setFocus(BASEFOCUS);
 		setRestoration(1);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.BOW);
 		getGearProficiencies().add(GearKeyword.CROSSBOW);

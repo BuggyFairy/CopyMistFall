@@ -14,6 +14,7 @@ public class Arani extends Hero{
 		setName("ARANI THE DAWNBREAKER CLERIC");
 		setFocus(BASEFOCUS);
 		setRestoration(2);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.AXE);
 		getGearProficiencies().add(GearKeyword.HAMMER);

@@ -14,6 +14,7 @@ public class Hareag extends Hero{
 		setName("HAREAG THE FROST MAGE");
 		setFocus(BASEFOCUS);
 		setRestoration(1);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.DAGGER);
 		getGearProficiencies().add(GearKeyword.STAFF);

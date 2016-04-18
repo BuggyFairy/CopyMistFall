@@ -14,6 +14,7 @@ public class Venda extends Hero{
 		setName("VENDA THE RAVENCRAG FURY");
 		setFocus(BASEFOCUS);
 		setRestoration(1);
+		setDrawLimit(5);
 		setGearProficiencies(new LinkedList<GearKeyword>());
 		getGearProficiencies().add(GearKeyword.AXE);
 		getGearProficiencies().add(GearKeyword.HAMMER);
