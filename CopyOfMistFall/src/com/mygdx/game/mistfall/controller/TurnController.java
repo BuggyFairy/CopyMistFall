@@ -242,6 +242,8 @@ public class TurnController {
 		// Resolve Conditions
 		List<Enemy> enemiesWithConditions = new LinkedList<Enemy>();
 		Enemy selectedEnemy;
+		int enemyPos;
+		boolean enemyDead;
 		// Check All Heroes
 		for (Hero h: gc.getHeroes()){
 			enemiesWithConditions.clear();
@@ -254,8 +256,41 @@ public class TurnController {
 			// Resolve enemy conditions if there are any
 			while (enemiesWithConditions.isEmpty()==false){
 				selectedEnemy=PickEnemyController.pickEnemy(enemiesWithConditions);
+				enemyDead=false;
+				enemyPos=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getEnemyPos(selectedEnemy);
+				
+				// ERROR: If the selected enemy is not in the Heros list go to the next enemy
+				if (enemyPos==-1){
+					enemiesWithConditions.remove(selectedEnemy);
+					continue;
+				}
+				
+				// Handle burning Conditions
 				for (int i=1; i<=selectedEnemy.getConditions().getBurning();i++){
-					//gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards()
+					// Apply Wounds and check if the Enemy died
+					enemyDead=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().get(enemyPos).applyWounds(1, gc);
+					if (enemyDead){
+						// Remove Enemy from list
+						gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().remove(enemyPos);
+						enemiesWithConditions.remove(selectedEnemy);
+						break;
+					}
+				}
+				// Go to the next enemy if the current enemy died
+				if (enemyDead){
+					continue;
+				}
+				
+				// Handle poison Conditions
+				for (int i=1; i<=selectedEnemy.getConditions().getPoison();i++){
+					// Apply Wounds and check if the Enemy died
+					enemyDead=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().get(enemyPos).applyWounds(1, gc);
+					if (enemyDead){
+						// Remove Enemy from list
+						gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().remove(enemyPos);
+						enemiesWithConditions.remove(selectedEnemy);
+						break;
+					}
 				}
 			}
 		}
