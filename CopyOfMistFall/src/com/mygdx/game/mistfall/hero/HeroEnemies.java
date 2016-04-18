@@ -21,4 +21,15 @@ private List<Enemy> cards;
 	public void setCards(List<Enemy> cards) {
 		this.cards = cards;
 	}
+	
+	public int getEnemyPos(Enemy enemy){
+		int pos=-1;
+		for (int i=0;i<cards.size();i++){
+			if (cards.get(i).equals(enemy)){
+				pos=i;
+				break;
+			}
+		}
+		return pos;
+	}
 }

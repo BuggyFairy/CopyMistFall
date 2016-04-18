@@ -1,6 +1,10 @@
 package com.mygdx.game.mistfall.controller;
 
+import java.util.List;
+
+import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Location;
+import com.mygdx.game.mistfall.model.enums.PickControllerCharacters;
 
 public class ViewController {
 
@@ -37,6 +41,28 @@ public class ViewController {
 		scoutConfirmed = false;
 		skipRelocation = false;
 		confirmRelocation = false;
+	}
+	
+	
+	
+	public int pickCharacter(PickControllerCharacters pickControllerCharacters, List<?> sourceList, Hero selectedHero ){
+		int characterPosition=-1;
+		
+		switch (pickControllerCharacters){
+			case HEROES:
+			
+			break;
+			case ENEMIES_HERO_AREA:
+				
+			break;
+			case ENEMIES_QUEST_AREA:
+				
+			break;
+			default:
+			break;
+		}
+		
+		return characterPosition;
 	}
 	
 	

@@ -2,6 +2,7 @@ package com.mygdx.game.mistfall.enemy;
 
 import java.util.LinkedList;
 
+import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.model.Card;
 import com.mygdx.game.mistfall.model.Conditions;
 import com.mygdx.game.mistfall.model.enums.AttackType;
@@ -157,6 +158,28 @@ public class Enemy extends Card {
 		this.conditions = conditions;
 	}
 
+	
+	/**
+	 * @param woundCount
+	 * @param gc
+	 * @return true if the enemy died
+	 * 
+	 * Removes the specified "woundCount" value from the current life of the enemy
+	 * if the enemy has zero or less life left, the resolve count is added to the resolve pool
+	 */
+	public boolean applyWounds(int woundCount, GameController gc){
+		boolean enemyDead=false;
+		// Apply Wounds
+		setLife(getLife()-woundCount);
+		// Check if the Enemy died
+		if (getLife()<=0){
+			// Reward Resolve
+			gc.getGameSetupController().changeResolvePool(resolve);
+			enemyDead=true;
+		}
+		
+		return enemyDead;
+	}
 	
 	
 }
