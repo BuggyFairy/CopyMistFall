@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.mygdx.game.mistfall.model.Conditions;
 import com.mygdx.game.mistfall.model.enums.GearKeyword;
+import com.mygdx.game.mistfall.model.modifications.Modification;
 
 public class Hero {
 
@@ -23,6 +24,8 @@ public class Hero {
 		private LinkedList<GearKeyword> gearProficiencies;
 		private Conditions conditions;
 		
+		private LinkedList<Modification> modifications;
+		
 		public Hero(){
 			this.hand = new Hand();
 			this.deck = new Deck();
@@ -30,6 +33,7 @@ public class Hero {
 			this.burialPile = new BurialPile();
 			this.gearAndFeats = new GearAndFeats();
 			this.heroEnemies = new HeroEnemies();
+			this.modifications = new LinkedList<Modification>();
 		}
 						
 		
@@ -199,6 +203,11 @@ public class Hero {
 			}
 			
 			return text;
-		}		
-		
+		}
+
+
+		public LinkedList<Modification> getModifications() {
+			return modifications;
+		}
+
 }

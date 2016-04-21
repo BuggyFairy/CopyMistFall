@@ -20,4 +20,16 @@ public class QuestArea {
 	public void setQuestAreaEnemies(List<Enemy> questAreaEnemies) {
 		this.questAreaEnemies = questAreaEnemies;
 	}
+	
+	public int getEnemyPos (Enemy enemy){
+		int pos=-1;
+		for (int i=0;i<questAreaEnemies.size();i++){
+			if (questAreaEnemies.get(i).equals(enemy)){
+				pos=i;
+				break;
+			}
+		}
+		return pos;
+	}
+	
 }

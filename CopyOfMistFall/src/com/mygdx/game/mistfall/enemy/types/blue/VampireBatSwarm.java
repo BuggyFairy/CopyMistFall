@@ -1,4 +1,4 @@
-package com.mygdx.game.mistfall.enemy.blue;
+package com.mygdx.game.mistfall.enemy.types.blue;
 
 import java.util.LinkedList;
 

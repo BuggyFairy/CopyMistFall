@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
-import com.mygdx.game.mistfall.enemy.blue.VampireBatSwarm;
+import com.mygdx.game.mistfall.enemy.types.blue.VampireBatSwarm;
 
 public class vergleichcheck {
 

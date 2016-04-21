@@ -22,7 +22,7 @@ private List<Enemy> cards;
 		this.cards = cards;
 	}
 	
-	public int getEnemyPos(Enemy enemy){
+	public int getEnemyPos (Enemy enemy){
 		int pos=-1;
 		for (int i=0;i<cards.size();i++){
 			if (cards.get(i).equals(enemy)){
@@ -32,4 +32,21 @@ private List<Enemy> cards;
 		}
 		return pos;
 	}
+	
+//	public int[] posOfEnemyWithAbility(EnemyAbilityType enemyAbilityType){
+//		int pos[] = new int[2];
+//		pos[0]=-1;
+//		pos[1]=-1;
+//		for (int i=0;i<cards.size();i++){
+//			for (int j=0;j<cards.get(i).getAbilities().size();j++){
+//				if (cards.get(i).getAbilities().get(j).getType()==enemyAbilityType){
+//					pos[0]=i;
+//					pos[1]=j;
+//					return pos;
+//				}
+//			}
+//		}
+//		return pos;
+	
+
 }

@@ -135,5 +135,38 @@ public class GameSetupController {
 			
 	}
 	
+	public int getEnemyPositionDiscard(Enemy enemy){
+		int pos=-1;
+		switch (enemy.getEnemyType()){
+		case BLUE:
+			for (int i=0;i<blueEnemiesDiscard.size();i++){
+				if (blueEnemiesDiscard.get(i).getEnemyID()==enemy.getEnemyID()){
+					pos=i;
+					break;
+				}
+			}
+		break;
+		case RED:
+			for (int i=0;i<redEnemiesDiscard.size();i++){
+				if (redEnemiesDiscard.get(i).getEnemyID()==enemy.getEnemyID()){
+					pos=i;
+					break;
+				}
+			}
+		break;
+		case GREEN:
+			for (int i=0;i<greenEnemiesDiscard.size();i++){
+				if (greenEnemiesDiscard.get(i).getEnemyID()==enemy.getEnemyID()){
+					pos=i;
+					break;
+				}
+			}
+		break;
+		default:
+		break;
+	}
+		
+		return pos;
+	}
 	
 }

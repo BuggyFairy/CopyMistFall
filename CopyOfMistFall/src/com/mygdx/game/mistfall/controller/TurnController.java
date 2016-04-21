@@ -4,12 +4,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
+import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.enums.LocationEffectUse;
 import com.mygdx.game.mistfall.model.enums.LocationStatus;
+import com.mygdx.game.mistfall.model.enums.PickControllerCharacters;
+import com.mygdx.game.mistfall.model.modifications.ModSource;
+import com.mygdx.game.mistfall.model.modifications.ModType;
 
 
 public class TurnController {
@@ -67,7 +71,7 @@ public class TurnController {
 			// Disperse enemy's in Quest and Hero areas
 			gc.disperseEnemies();
 			
-			//Apply Location effects
+			//Apply Location effects from the type ENTER_NEW_LOCATION
 			if (gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).getLocationsEffectUse().contains(LocationEffectUse.ENTER_NEW_LOCATION)){
 				gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).applyEffect();
 			}
@@ -80,7 +84,7 @@ public class TurnController {
 		if (gc.getActiveEncounter()==null && gc.getActiveLovation().getLocationStatus()!=LocationStatus.SAFE){
 			// draw encounter
 			drawEncounter(gc);
-			//Apply Location effects
+			//Apply Location effects from the type DRAW_NEW_ENCOUNTER
 			if (gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getActiveLovation().getCoordinates()).getLocationsEffectUse().contains(LocationEffectUse.DRAW_NEW_ENCOUNTER)){
 				gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getActiveLovation().getCoordinates()).applyEffect();
 			}
@@ -97,13 +101,14 @@ public class TurnController {
 	public void pursuitPhase(GameController gc){
 		
 		List<Hero> heroesWithHighestFocus = new LinkedList<Hero>();
-		int highestFocusValue=0;
+		int highestFocusValue;
 		boolean heroWithFocusLeft=true;
 		
 		// Run as long as there are Enemies left in the Questing Area and at least 1 hero has a focus >0
 		while (gc.getQuestArea().getQuestAreaEnemies().size()>0 && heroWithFocusLeft==true){ 
 			// Clear List
 			heroesWithHighestFocus.clear();
+			highestFocusValue=0;
 			// Get highest Focus Value among all heroes
 			for(Hero h:gc.getHeroes()){
 				if (h.getFocus()>highestFocusValue){
@@ -129,7 +134,7 @@ public class TurnController {
 			// If there are 2 or more heroes in the list, the players must decide which hero will be pursuited by the enemy at the top of the list
 			else if (heroesWithHighestFocus.size()>1){
 				// Get Chosen Hero of the players
-				Hero selectedHero = PickHeroController.pickHero(heroesWithHighestFocus);
+				Hero selectedHero = heroesWithHighestFocus.get(gc.getViewController().pickCharacter(PickControllerCharacters.HEROES, heroesWithHighestFocus, null));
 				// Add Enemy from the top of the quest area list to the hero's area
 				gc.getHeroes().get(selectedHero.getHeroID()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
 				gc.getQuestArea().getQuestAreaEnemies().remove(0);
@@ -150,8 +155,7 @@ public class TurnController {
 		// As long as there is a Hero left in the List, proceed with the heroPhase
 		while (heroesWithTurnLeft.isEmpty()==false){
 			// Get active Hero from the players and set the active hero ID
-			gc.setActiveHero(PickHeroController.pickHero(heroesWithTurnLeft).getHeroID());
-			
+			gc.setActiveHero(heroesWithTurnLeft.get(gc.getViewController().pickCharacter(PickControllerCharacters.HEROES, heroesWithTurnLeft, null)).getHeroID());
 			// Resolve "At the start of your Turn Abilities"
 			//TODO: s.o.
 			
@@ -184,24 +188,19 @@ public class TurnController {
 		List<Hero> heroesWithEnemies = new LinkedList<Hero>();
 		List<Enemy> localHeroEnemies = new LinkedList<Enemy>();
 		Enemy activeEnemy;
+		Boolean isSlowed;
 		
 		// Get all Heroes with Enemies in their Hero Area that are not slowed
 		for (Hero h : gc.getHeroes()){
-			// Add Hero if there are no enemies in the hero area
-			if (h.getHeroEnemies().getCards().isEmpty()){
-				heroesWithEnemies.add(h);
-			}
-			// Add Hero if all the enemies in the Area are slowed
-			else{
-				boolean addHero=true;
+			// If there are any enemies in the Hero area
+			if (h.getHeroEnemies().getCards().isEmpty()==false){
+				// If at least one enemy is NOT slowed
 				for (Enemy e : h.getHeroEnemies().getCards()){
-					if (e.isSlowed()==false){
-						addHero=false;
+					if (e.searchModification(ModType.SLOW)==false){
+						// Add Hero to list "heroesWithEnemies" 
+						heroesWithEnemies.add(h);
 						break;
 					}
-				}
-				if (addHero==true){
-					heroesWithEnemies.add(h);
 				}
 			}
 		}
@@ -212,11 +211,11 @@ public class TurnController {
 			localHeroEnemies.clear();
 			
 			// Players choose which hero they want to activate; set active Hero
-			gc.setActiveHero(PickHeroController.pickHero(heroesWithEnemies).getHeroID());
+			gc.setActiveHero(heroesWithEnemies.get(gc.getViewController().pickCharacter(PickControllerCharacters.HEROES, heroesWithEnemies, null)).getHeroID());
 			
 			// Add all enemies that are not slowed to "localHeroEnemies" list
 			for (Enemy e : gc.getHeroes().get(gc.getActiveHero()).getHeroEnemies().getCards()){
-				if (e.isSlowed()==false){
+				if (e.searchModification(ModType.SLOW)==false){
 					localHeroEnemies.add(e);
 				}
 			}
@@ -224,7 +223,7 @@ public class TurnController {
 			// Runs until every enemy of "localHeroEnemies" was activated once
 			while (localHeroEnemies.isEmpty()==false){
 				// Player activates a enemy in their hero area
-				activeEnemy = CardController.pickEnemyCard();
+				activeEnemy = localHeroEnemies.get(gc.getViewController().pickCharacter(PickControllerCharacters.ENEMIES_HERO_AREA, localHeroEnemies, gc.getHeroes().get(gc.getActiveHero())));
 				
 				// Enemy Attacks
 				//TODO: Enemy attack + Reflex
@@ -238,6 +237,15 @@ public class TurnController {
 			gc.setActiveHero(-1);		
 		}
 		
+		
+		// Remove Slow Modification from all enemies if possible
+		for (int i=0;i<gc.getHeroes().size();i++){
+			for (int j=0;j<gc.getHeroes().get(i).getHeroEnemies().getCards().size();j++){
+				if (gc.getHeroes().get(i).getHeroEnemies().getCards().get(j).getAbilities().contains(EnemyAbilityType.SLOW)){
+					gc.getHeroes().get(i).getHeroEnemies().getCards().get(j).removeModification(ModType.SLOW, ModSource.ENEMY, gc.getHeroes().get(i).getHeroEnemies().getCards().get(j).getEnemyID());
+				}
+			}
+		}
 		
 		// Resolve Conditions
 		List<Enemy> enemiesWithConditions = new LinkedList<Enemy>();
@@ -255,7 +263,7 @@ public class TurnController {
 			}
 			// Resolve enemy conditions if there are any
 			while (enemiesWithConditions.isEmpty()==false){
-				selectedEnemy=PickEnemyController.pickEnemy(enemiesWithConditions);
+				selectedEnemy=enemiesWithConditions.get(gc.getViewController().pickCharacter(PickControllerCharacters.ENEMIES_HERO_AREA, enemiesWithConditions, h));
 				enemyDead=false;
 				enemyPos=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getEnemyPos(selectedEnemy);
 				
@@ -461,7 +469,7 @@ public class TurnController {
 				default :
 					//TODO: Exception handling
 					break;
-				}
+				}	
 			// When the enemy Deck was shuffled 2 times or more set time penalty and stop drawing
 			if(shuffleCount>=2){
 				timePenalty=true;

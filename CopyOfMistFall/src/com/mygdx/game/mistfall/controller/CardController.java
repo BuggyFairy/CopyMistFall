@@ -235,13 +235,6 @@ public class CardController {
 
 	}
 	
-	
-	public static Enemy pickEnemyCard() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	
 	/**
 	 * @param hero
 	 * @return returns true if the hero was able to draw until the draw limit was reached
