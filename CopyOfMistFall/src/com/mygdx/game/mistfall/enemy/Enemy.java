@@ -196,50 +196,88 @@ public class Enemy extends Card {
 		return updated;
 	}
 	/**
-	 * @param modType
-	 * @param sourceName
-	 * @return true if the removal was successful
-	 * Removes the specified Modification if available and adjusts the values if necessary
+	 *  Removes the specified Modification if available and adjusts the values if necessary. 
+	 *  Returns TRUE If the specified Modification was found and removed. 
+	 *  If sourceID==-1 ANY Modification of the ModType is removed regardless the sourceID
 	 */
 	public boolean removeModification(ModType modType, ModSource modSource, int sourceID){
 		boolean removed=false;
 		int pos=-1;
-		// Check if the Modification exists and save the position in the list
-		for (int i=0;i<modifications.size();i++){
-			if (modifications.get(i).getModType()==modType && 
-				modifications.get(i).getModSource()==modSource &&
-				modifications.get(i).getSourceID()==sourceID){
-				pos=i;
-				break;
+		// If the sourceID is >-1 remove the specified Modification
+		if (sourceID>-1){
+			// Check if the Modification exists and save the position in the list
+			for (int i=0;i<modifications.size();i++){
+				if (modifications.get(i).getModType()==modType && 
+					modifications.get(i).getModSource()==modSource &&
+					modifications.get(i).getSourceID()==sourceID){
+					pos=i;
+					break;
+				}
+			}
+			// If the Modifications was found
+			if (pos!=-1){
+				// Adjust Values if necessary
+				switch(modifications.get(pos).getModTarget()){
+					case ATTACK:
+						attack.setValueMod(attack.getValueMod()-modifications.get(pos).getValue());
+					break;
+					case LIFE:
+						life.setValueBase(life.getValueBase()-modifications.get(pos).getValue());
+						life.setValueCurrent(life.getValueCurrent()-modifications.get(pos).getValue());
+					break;
+					case PHYSICAL_RESISTANCE:
+						resistances.setPhysicalResMod(resistances.getPhysicalResMod()-modifications.get(pos).getValue());
+					break;
+					case MAGICAL_RESISTANCE:
+						resistances.setMagicalResMod(resistances.getMagicalResMod()-modifications.get(pos).getValue());
+					break;
+					case RANGE:
+						targetRange=targetRange-modifications.get(pos).getValue();
+					break;
+					
+					default:
+					break;
+				}
+				// Remove Entry and set return
+				modifications.remove(pos);
+				removed=true;
 			}
 		}
-		// If the Modifications was found
-		if (pos!=-1){
-			// Adjust Values if necessary
-			switch(modifications.get(pos).getModTarget()){
-				case ATTACK:
-					attack.setValueMod(attack.getValueMod()-modifications.get(pos).getValue());
-				break;
-				case LIFE:
-					life.setValueBase(life.getValueBase()-modifications.get(pos).getValue());
-					life.setValueCurrent(life.getValueCurrent()-modifications.get(pos).getValue());
-				break;
-				case PHYSICAL_RESISTANCE:
-					resistances.setPhysicalResMod(resistances.getPhysicalResMod()-modifications.get(pos).getValue());
-				break;
-				case MAGICAL_RESISTANCE:
-					resistances.setMagicalResMod(resistances.getMagicalResMod()-modifications.get(pos).getValue());
-				break;
-				case RANGE:
-					targetRange=targetRange-modifications.get(pos).getValue();
-				break;
-				
-				default:
-				break;
+		// If the sourceID == -1 remove all Modification that match the modType
+		if (sourceID==-1){
+			int i=0;
+			// Go through all Modifications
+			while (i<modifications.size()){
+				// If a matching Modification was found, adjust Values if necessary and remove the Modification
+				if (modifications.get(i).getModType()==modType){
+					switch(modifications.get(i).getModTarget()){
+						case ATTACK:
+							attack.setValueMod(attack.getValueMod()-modifications.get(i).getValue());
+						break;
+						case LIFE:
+							life.setValueBase(life.getValueBase()-modifications.get(i).getValue());
+							life.setValueCurrent(life.getValueCurrent()-modifications.get(i).getValue());
+						break;
+						case PHYSICAL_RESISTANCE:
+							resistances.setPhysicalResMod(resistances.getPhysicalResMod()-modifications.get(i).getValue());
+						break;
+						case MAGICAL_RESISTANCE:
+							resistances.setMagicalResMod(resistances.getMagicalResMod()-modifications.get(i).getValue());
+						break;
+						case RANGE:
+							targetRange=targetRange-modifications.get(i).getValue();
+						break;
+						
+						default:
+						break;
+					}
+					modifications.remove(i);
+					removed=true;
+				}
+				else{
+					i++;
+				}
 			}
-			// Remove Entry and set return
-			modifications.remove(pos);
-			removed=true;
 		}
 		
 		return removed;
