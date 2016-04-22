@@ -222,43 +222,23 @@ public class EnemyController {
 		PackHunter.updateHound(gc, enemy, source, dest, heroDest, heroSource);
 		
 		
-		
-		
-		
+
 		// Remove all Modifications if a Enemy is discarded or defeated
 		if (dest==EnemyArea.DISCARD){
 			enemyPos=gc.getGameSetupController().getEnemyPositionDiscard(enemy);
 			if (enemyPos!=-1){
 				switch (enemy.getEnemyType()){
 					case BLUE:
-						// Clear Modification List
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getModifications().clear();
-						// Reset Life, Attack and Resistance Values to the Base Values
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getAttack().setValueMod(gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getAttack().getValueBase());
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getLife().setValueMod(gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getLife().setValueCurrent(gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getResistances().setMagicalResMod(gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getResistances().getMagicalResBase());
-						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getResistances().setPhysicalResMod(gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).getResistances().getPhysicalResBase());
+						// Clear Modification List and  Reset Life, Attack and Resistance Values to the Base Values
+						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).clearModifications();		
 					break;
 					case RED:
-						// Clear Modification List
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getModifications().clear();
-						// Reset Life, Attack and Resistance Values to the Base Values
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getAttack().setValueMod(gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getAttack().getValueBase());
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getLife().setValueMod(gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getLife().setValueCurrent(gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getResistances().setMagicalResMod(gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getResistances().getMagicalResBase());
-						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getResistances().setPhysicalResMod(gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).getResistances().getPhysicalResBase());
+						// Clear Modification List and  Reset Life, Attack and Resistance Values to the Base Values
+						gc.getGameSetupController().getRedEnemiesDiscard().get(enemyPos).clearModifications();	
 					break;
 					case GREEN:
-						// Clear Modification List
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getModifications().clear();
-						// Reset Life, Attack and Resistance Values to the Base Values
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getAttack().setValueMod(gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getAttack().getValueBase());
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getLife().setValueMod(gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getLife().setValueCurrent(gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getLife().getValueBase());
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getResistances().setMagicalResMod(gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getResistances().getMagicalResBase());
-						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getResistances().setPhysicalResMod(gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).getResistances().getPhysicalResBase());
+						// Clear Modification List and  Reset Life, Attack and Resistance Values to the Base Values
+						gc.getGameSetupController().getGreenEnemiesDiscard().get(enemyPos).clearModifications();	
 					break;
 					default:
 					break;

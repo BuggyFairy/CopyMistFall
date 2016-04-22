@@ -283,6 +283,20 @@ public class Enemy extends Card {
 		return removed;
 	}
 	
+	/**
+	 * Clears the Modification List an resets Life, Attack and Resistance Values to the Base Values
+	 */
+	public void clearModifications(){
+		// Clear Modification List
+		getModifications().clear();
+		// Reset Life, Attack and Resistance Values to the Base Values
+		getAttack().setValueMod(getAttack().getValueBase());
+		getLife().setValueMod(getLife().getValueBase());
+		getLife().setValueCurrent(getLife().getValueBase());
+		getResistances().setMagicalResMod(getResistances().getMagicalResBase());
+		getResistances().setPhysicalResMod(getResistances().getPhysicalResBase());
+	}
+	
 	public boolean searchModification(ModType modType){
 		boolean modFound=false;
 		
@@ -307,18 +321,7 @@ public class Enemy extends Card {
 		return abilityFound;
 	}
 
-//	public int posOfAbility (EnemyAbilityType enemyAbilityType){
-//		int pos=-1;
-//		for (int i=0;i<abilities.size();i++){
-//			if (abilities.get(i).getType()==enemyAbilityType){
-//				pos=i;
-//				break;
-//			}
-//		}
-//		return pos;
-//	}
-	
-	
+
 //	public String toString(){
 //		String text;
 //		text = "This Enemy contains: \n"+ "Name: "+getName()+"\nLife: "+getLife()+"\nAttack Type: "+ getAttackType().toString()+
@@ -329,14 +332,14 @@ public class Enemy extends Card {
 //	}
 
 	
-//	/**
-//	 * @param woundCount
-//	 * @param gc
-//	 * @return true if the enemy died
-//	 * 
-//	 * Removes the specified "woundCount" value from the current life of the enemy
-//	 * if the enemy has zero or less life left, the resolve count is added to the resolve pool
-//	 */
+	/**
+	 * @param woundCount
+	 * @param gc
+	 * @return true if the enemy died
+	 * 
+	 * Removes the specified "woundCount" value from the current life of the enemy
+	 * if the enemy has zero or less life left, the resolve count is added to the resolve pool
+	 */
 	public boolean applyWounds(int woundCount, GameController gc){
 		boolean enemyDead=false;
 		// Apply Wounds
