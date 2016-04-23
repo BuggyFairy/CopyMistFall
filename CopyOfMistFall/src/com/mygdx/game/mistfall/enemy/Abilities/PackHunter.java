@@ -4,8 +4,8 @@ import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -33,7 +33,7 @@ public class PackHunter {
 				}
 			}
 			// Try Update, if not successful, generate new entry
-			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount, enemy.getEnemyID(), enemy.getName());
+			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount, enemy.getEnemyID());
 		}
 		// If the Enemy with the PACK_HUNTER Ability was moved to the Quest Area remove the PACK_HUNTER Modification
 		if (dest==EnemyArea.QUEST){
@@ -46,7 +46,6 @@ public class PackHunter {
 	public static void updateHound(GameController gc,Enemy enemy,EnemyArea source, EnemyArea dest,Hero heroDest,Hero heroSource){
 		
 		int enemyID;
-		String enemyName;
 		int heroIdDest;
 		int heroIDsource;
 		int houndCount;
@@ -67,9 +66,8 @@ public class PackHunter {
 						// If a PACK_HUNTER Enemy is found an there are more than one HOUND enemy in the same Area, update the PACK_HUNTER Enemy
 						// with the value houndCount-1 because he is a Hound himself, but does not count for his Ability
 						enemyID=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).getEnemyID();
-						enemyName=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).getName();
 						if (houndCount>1){
-							gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount-1, enemyID, enemyName);
+							gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount-1, enemyID);
 						}
 					}
 				}
@@ -86,11 +84,10 @@ public class PackHunter {
 				for (int i=0;i<gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().size();i++){
 					if (gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).searchAbility(EnemyAbilityType.PACK_HUNTER)){
 						enemyID=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).getEnemyID();
-						enemyName=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).getName();
 						// If a PACK_HUNTER Enemy is found an there are more than one HOUND enemy in the same Area, update the PACK_HUNTER Enemy
 						// with the value houndCount-1 because he is a Hound himself, but does not count for his Ability
 						if (houndCount>1){
-							gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount-1, enemyID,enemyName);
+							gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.PACK_HUNTER, ModTarget.ATTACK, houndCount-1, enemyID);
 						}
 						// If not remove the Modification from the PACK_HUNTER Enemy if possible
 						else{

@@ -4,8 +4,8 @@ import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -37,7 +37,7 @@ public class Skirmisher {
 			}
 			// If there is at least 1 Enemy without the RANGED Keyword, add the SKIRMISHER Modification if possible
 			else{
-				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKIRMISHER, ModTarget.RANGE, 1, enemy.getEnemyID(), enemy.getName());
+				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKIRMISHER, ModTarget.RANGE, 1, enemy.getEnemyID());
 			}
 		}
 		// If a Skirmisher Enemy enters a Quest Area check for other range enemies
@@ -57,7 +57,7 @@ public class Skirmisher {
 			}
 			// If there is at least 1 Enemy without the RANGED Keyword, add the SKIRMISHER Modification if possible
 			else{
-				gc.getQuestArea().getQuestAreaEnemies().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKIRMISHER, ModTarget.RANGE, 1, enemy.getEnemyID(), enemy.getName());
+				gc.getQuestArea().getQuestAreaEnemies().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKIRMISHER, ModTarget.RANGE, 1, enemy.getEnemyID());
 			}
 		}
 	}

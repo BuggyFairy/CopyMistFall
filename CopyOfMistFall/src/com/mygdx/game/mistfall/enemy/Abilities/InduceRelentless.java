@@ -4,8 +4,8 @@ import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -16,7 +16,6 @@ public class InduceRelentless {
 	public static void update(GameController gc,Enemy enemy,EnemyArea source, EnemyArea dest,Hero heroDest,Hero heroSource, EnemyAbilityType enemyAbilityType, EnemyKeyword enemyKeyword){
 		
 		int enemyID;
-		String enemyName;
 		int heroIdDest;
 		int heroIDsource;
 		boolean modificationFound;
@@ -31,7 +30,7 @@ public class InduceRelentless {
 					gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).searchAbility(EnemyAbilityType.RELENTLESS)==false &&
 					gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).searchModification(ModType.RELENTLESS)==false){
 					
-					gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemy.getEnemyID(), enemy.getName());
+					gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemy.getEnemyID());
 					break;
 				}
 			}	
@@ -77,8 +76,7 @@ public class InduceRelentless {
 								gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).searchAbility(EnemyAbilityType.RELENTLESS)==false &&
 								gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).searchModification(ModType.RELENTLESS)==false){
 								enemyID=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).getEnemyID();
-								enemyName=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).getName();
-								gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID, enemyName);
+								gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(k).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID);
 								break;
 							}
 						}	
@@ -92,7 +90,6 @@ public class InduceRelentless {
 		
 		int enemyPos;
 		int enemyID;
-		String enemyName;
 		int heroIdDest;
 		int heroIDsource;
 		boolean updatePossible;
@@ -138,8 +135,7 @@ public class InduceRelentless {
 									gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(j).searchAbility(EnemyAbilityType.RELENTLESS)==false &&
 									gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(j).searchModification(ModType.RELENTLESS)==false){
 									enemyID=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).getEnemyID();
-									enemyName=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).getName();
-									gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(j).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID, enemyName);
+									gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(j).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID);
 									break;
 								}
 							}
@@ -176,8 +172,7 @@ public class InduceRelentless {
 						// If there is an Enemy with the "enemyAbilityType" Ability that did not already used it, give the "enemyKeyword" the Relentless Modification
 						if (updatePossible==true){
 							enemyID=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).getEnemyID();
-							enemyName=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(i).getName();
-							gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID, enemyName);
+							gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RELENTLESS, ModTarget.GENERAL, 0, enemyID);
 							break;
 						}
 					}

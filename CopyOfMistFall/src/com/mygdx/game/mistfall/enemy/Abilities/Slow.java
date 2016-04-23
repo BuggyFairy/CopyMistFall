@@ -21,7 +21,7 @@ public class Slow {
 		if (dest==EnemyArea.HERO){
 			heroIdDest=heroDest.getHeroID();
 			enemyPos=gc.getHeroes().get(heroIdDest).getHeroEnemies().getEnemyPos(enemy);
-			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SLOW, ModTarget.GENERAL, 0, enemy.getEnemyID(), enemy.getName());
+			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SLOW, ModTarget.GENERAL, 0, enemy.getEnemyID());
 		}
 		// If a Enemy with the SLOW Ability moves from a Hero Area in the Quest Area, remove the SLOW Modification if possible
 		if (dest==EnemyArea.QUEST && source==EnemyArea.HERO){

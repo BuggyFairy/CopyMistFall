@@ -17,7 +17,7 @@ public class Skulduggery {
 		
 		if (dest==EnemyArea.HERO){
 			int enemyPos=gc.getHeroes().get(heroDest.getHeroID()).getHeroEnemies().getEnemyPos(enemy);
-			gc.getHeroes().get(heroDest.getHeroID()).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKULDUGGERY, ModTarget.GENERAL, 0, enemy.getEnemyID(), enemy.getName());
+			gc.getHeroes().get(heroDest.getHeroID()).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SKULDUGGERY, ModTarget.GENERAL, 0, enemy.getEnemyID());
 		}
 	}
 	

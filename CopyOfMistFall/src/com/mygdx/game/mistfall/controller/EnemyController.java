@@ -4,6 +4,7 @@ import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.Abilities.BloodFury;
 import com.mygdx.game.mistfall.enemy.Abilities.CursedBolt;
 import com.mygdx.game.mistfall.enemy.Abilities.Firebolt;
+import com.mygdx.game.mistfall.enemy.Abilities.Flailing;
 import com.mygdx.game.mistfall.enemy.Abilities.InduceRelentless;
 import com.mygdx.game.mistfall.enemy.Abilities.ManaDrain;
 import com.mygdx.game.mistfall.enemy.Abilities.PackHunter;
@@ -17,12 +18,16 @@ import com.mygdx.game.mistfall.enemy.Abilities.Slow;
 import com.mygdx.game.mistfall.enemy.Abilities.Swarm;
 import com.mygdx.game.mistfall.enemy.Abilities.Thievery;
 import com.mygdx.game.mistfall.enemy.Abilities.Vampiric;
+import com.mygdx.game.mistfall.enemy.Abilities.VengefulShriek;
 import com.mygdx.game.mistfall.enemy.Abilities.Venomous;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemyOperation;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
+import com.mygdx.game.mistfall.model.modifications.ModSource;
+import com.mygdx.game.mistfall.model.modifications.ModTarget;
+import com.mygdx.game.mistfall.model.modifications.ModType;
 
 public class EnemyController {	
 	
@@ -125,7 +130,11 @@ public class EnemyController {
 					Firebolt.addModification(gc, enemy, dest, heroDest);
 				break;
 				
+				// Flailing: "<Hero Area> After this Enemy enters a <Hero Area> during any Pursuit Phase the player places 2 daze Tokens on their Hero Charter"
 				case FLAILING:
+					if (dest==EnemyArea.HERO && enemyOperation==EnemyOperation.PURSUIT){
+						Flailing.activate(gc, enemy, heroDest);
+					}
 				break;
 					
 				// Mana Drain: "<Hero Area> Whenever a player Buries any cards as a result of this Enemy's attack, that player discards 1 ARCANE or SPELL card, if able"
@@ -155,7 +164,9 @@ public class EnemyController {
 				
 				// Scavenger: "<Hero Area> After this Enemy enters a <Hero Area> the Player Buries 2 cards from their discard pile if able."
 				case SCAVENGER:
-					Scavenger.activateScavenger(gc, enemy, source, dest, heroDest, heroSource);
+					if (dest==EnemyArea.HERO){
+						Scavenger.activate(gc, enemy, heroDest);
+					}
 				break;
 				
 				// Shield Slam: "<Hero Area> Whenever a player Buries any cards as a result of this Enemy's attack, place 2 Daze Tokens on that player's Hero Charter"
@@ -195,7 +206,11 @@ public class EnemyController {
 					Vampiric.addModification(gc, enemy, dest, heroDest);
 				break;
 				
+				// Vengeful Shriek: "<Hero Area> After this Enemy enters a <Hero Area>, enrage 1 other UNDEAD Enemy in that <Hero Area> if able."
 				case VENGEFUL_SHRIEK:
+					if (dest==EnemyArea.HERO){
+						VengefulShriek.activate(gc, enemy, heroDest);
+					}
 				break;
 					
 				// Venomous: "<Hero Area> Whenever a player Buries any cards as a result of this Enemy's attack, place 1 Poison Token on that player's Hero Charter"
@@ -227,7 +242,7 @@ public class EnemyController {
 		if (dest==EnemyArea.DISCARD){
 			enemyPos=gc.getGameSetupController().getEnemyPositionDiscard(enemy);
 			if (enemyPos!=-1){
-				switch (enemy.getEnemyType()){
+				switch (enemy.getEnemySuit()){
 					case BLUE:
 						// Clear Modification List and  Reset Life, Attack and Resistance Values to the Base Values
 						gc.getGameSetupController().getBlueEnemiesDiscard().get(enemyPos).clearModifications();		
@@ -246,4 +261,162 @@ public class EnemyController {
 			}		
 		}
 	}
+	
+	
+	
+	
+	
+	public boolean enrageEnemy(GameController gc, Enemy enemy, Hero hero){
+		
+		int heroID=hero.getHeroID();
+		int enemyPos=gc.getHeroes().get(heroID).getHeroEnemies().getEnemyPos(enemy);
+		int enemyID=gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getEnemyID();
+		
+		// If the Enemy was found
+		if (enemyPos!=-1){
+			// If the Enemy is not already enraged
+			if (gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).isEnraged()==false){
+				switch (gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getEnemyType()){
+				
+					// Add +1 Magical Resistance
+					case RENEGADE_FLAMECASTER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RAGE, ModTarget.MAGICAL_RESISTANCE, 1, enemyID);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+					break;
+					
+					// Add +1 Magical Resistance and +1 Physical Resistance
+					case BLACKWOOD_FIGHTER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RAGE, ModTarget.MAGICAL_RESISTANCE, 1, enemyID);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RAGE, ModTarget.PHYSICAL_RESISTANCE, 1, enemyID);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+					break;
+					
+					// Add +1 Damage
+					case BLACKWOOD_AMBUSHER:
+					case BLACKWOOD_ASSASSIN:
+					case BLACKWOOD_CHANGELING:
+					case BLOODSCORNE_VAMPIRE:
+					case BONESORROW_SHOOTER:
+					case BONESORROW_WARRIOR:
+					case DIRE_WOLF:
+					case TRACKER_HOUND:
+					case TWISTED_CURSEBEARER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RAGE, ModTarget.ATTACK, 1, enemyID);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+					break;
+					
+					// Ignore Slow
+					case CURSED_WALKER:
+					case ICE_REAVER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.RAGE, ModTarget.ABILITY, 0, enemyID);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+					break;
+					
+					// Attack and Calm after
+					case BLACK_COVEN_CASTER:
+					case GHOREN_RAGECALLER:
+					case GHOREN_SMALLHORN:
+					case GHOREN_WARRIOR:
+					case RAVENOUS_DRAUGR:
+					case VAMPIRE_BAT_SWARM:
+					case WILD_ICEHOUND:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						// TODO: Attack the Hero
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Remove all Wounds from this enemy and calm after
+					case UNDEAD_LOREMASTER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().setValueCurrent(gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().getValueMod());
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Remove 1 Wound from this enemy and calm after
+					case GHOREN_SLINGER:
+					case GHOREN_BLOOD_TRACKER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						if (gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().getValueCurrent()<gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().getValueMod()){
+							gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().setValueCurrent(gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).getLife().getValueCurrent()+1);
+						}
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Remove 1 Wound from all UNDEAD Enemies in the same Area, calm after
+					case BONESORROW_MAGUS:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						for (int i=0;i<gc.getHeroes().get(heroID).getHeroEnemies().getCards().size();i++){
+							if (gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(i).getEnemyKeyword().contains(EnemyKeyword.UNDEAD)){
+								if (gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(i).getLife().getValueCurrent()<gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(i).getLife().getValueMod()){
+									gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(i).getLife().setValueCurrent(gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(i).getLife().getValueCurrent()+1);
+								}
+							}
+						}		
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// The Hero discards 1 Card, calm after
+					case WILDLANDS_SHAMAN:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						// TODO: Discard 1 card
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Apply Thievery effect as if a card was Buried, calm after
+					case BLACKWOOD_CUTTPURSE:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						Thievery.applyEffect();
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Apply Skulduggery effect as if a card was Buried, calm after
+					case BLACKWOOD_HARASSER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						Skulduggery.applyEffect();
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Apply Mana Drain effect as if a card was Buried, calm after
+					case BLACKWOOD_MAGEHUNTER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						ManaDrain.applyEffect();
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Activate the Flailing ability, calm after
+					case TWISTED_LASHER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						Flailing.activate(gc, enemy, hero);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Activate the Scavenger ability, calm after
+					case FELLSTALKER:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						Scavenger.activate(gc, enemy, hero);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					// Activate Vengeful Shriek, calm after
+					case VENGEFUL_BANSHEE:
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(true);
+						VengefulShriek.activate(gc, enemy, hero);
+						gc.getHeroes().get(heroID).getHeroEnemies().getCards().get(enemyPos).setEnraged(false);
+					break;
+					
+					default:	
+					break;
+				}
+			}
+			else{
+				return false;
+			}
+		}
+		else{
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

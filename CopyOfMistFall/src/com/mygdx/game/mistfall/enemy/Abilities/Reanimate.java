@@ -3,8 +3,8 @@ package com.mygdx.game.mistfall.enemy.Abilities;
 import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -20,7 +20,7 @@ public class Reanimate {
 		if(dest==EnemyArea.HERO){
 			heroIdDest=heroDest.getHeroID();
 			enemyPos=gc.getHeroes().get(heroIdDest).getHeroEnemies().getEnemyPos(enemy);
-			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.REANIMATE, ModTarget.GENERAL, 0, enemy.getEnemyID(), enemy.getName());
+			gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.REANIMATE, ModTarget.GENERAL, 0, enemy.getEnemyID());
 		}
 		// If a Enemy with the REANIMATE Ability moves from a Hero Area in the Quest Area, remove the REANIMATE Modification if possible
 		if (dest==EnemyArea.QUEST && source==EnemyArea.HERO){

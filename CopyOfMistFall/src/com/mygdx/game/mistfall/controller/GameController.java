@@ -221,7 +221,7 @@ public class GameController {
 		Boolean isRelentless;
 		// Disperse Quest Area
 		while(i<questArea.getQuestAreaEnemies().size()){
-			switch (questArea.getQuestAreaEnemies().get(i).getEnemyType()){
+			switch (questArea.getQuestAreaEnemies().get(i).getEnemySuit()){
 				case BLUE:
 					gameSetupController.getBlueEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
 				break;
@@ -240,7 +240,7 @@ public class GameController {
 			while(i<heroes.get(j).getHeroEnemies().getCards().size()){
 				// If the Current Enemy does no possess the RELENTLESS Modification, discard him
 				if (heroes.get(j).getHeroEnemies().getCards().get(i).searchModification(ModType.RELENTLESS)==false){
-					switch (heroes.get(j).getHeroEnemies().getCards().get(i).getEnemyType()){
+					switch (heroes.get(j).getHeroEnemies().getCards().get(i).getEnemySuit()){
 						case BLUE:
 							gameSetupController.getBlueEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
 						break;

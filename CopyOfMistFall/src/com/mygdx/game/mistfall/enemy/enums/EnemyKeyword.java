@@ -1,4 +1,4 @@
-package com.mygdx.game.mistfall.model.enums;
+package com.mygdx.game.mistfall.enemy.enums;
 
 public enum EnemyKeyword {
 

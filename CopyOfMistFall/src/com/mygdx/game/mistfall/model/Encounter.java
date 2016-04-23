@@ -2,15 +2,15 @@ package com.mygdx.game.mistfall.model;
 
 import java.util.List;
 
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
-import com.mygdx.game.mistfall.model.enums.EnemyType;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
+import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
 import com.mygdx.game.mistfall.model.enums.LocationType;
 
 public class Encounter extends Card{
 	
 	private int reinforcment;
 	private int initialEnemyCount;
-	private EnemyType enemyType;
+	private EnemySuit enemyType;
 	private EnemyKeyword enemyKeyword;
 	private List<LocationType> locationTypes;
 	
@@ -33,10 +33,10 @@ public class Encounter extends Card{
 	public void setInitialEnemyCount(int initialEnemyCount) {
 		this.initialEnemyCount = initialEnemyCount;
 	}
-	public EnemyType getEnemyType() {
+	public EnemySuit getEnemyType() {
 		return enemyType;
 	}
-	public void setEnemyType(EnemyType enemyType) {
+	public void setEnemyType(EnemySuit enemyType) {
 		this.enemyType = enemyType;
 	}
 	public EnemyKeyword getEnemyKeyword() {

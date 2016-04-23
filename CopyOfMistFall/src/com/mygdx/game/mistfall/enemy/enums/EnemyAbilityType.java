@@ -27,5 +27,5 @@ public enum EnemyAbilityType {
 	SKULDUGGERY,
 	SHAPESHIFT,
 	BLOOD_FURY,
-	PACK_HUNTER
+	PACK_HUNTER,
 }

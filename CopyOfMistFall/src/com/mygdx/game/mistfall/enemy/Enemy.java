@@ -4,19 +4,21 @@ import java.util.LinkedList;
 
 import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
-import com.mygdx.game.mistfall.model.Card;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
+import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
+import com.mygdx.game.mistfall.enemy.enums.EnemyType;
 import com.mygdx.game.mistfall.model.Conditions;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
-import com.mygdx.game.mistfall.model.enums.EnemyType;
 import com.mygdx.game.mistfall.model.enums.Vulnerability;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
 import com.mygdx.game.mistfall.model.modifications.Modification;
 
-public class Enemy extends Card {
+public class Enemy  {
 	
 	private int enemyID;
+	private String name;
+	private EnemySuit enemySuit;
 	private EnemyType enemyType;
 	private boolean specialEnemy;
 	private LinkedList<EnemyKeyword> enemyKeyword;
@@ -28,6 +30,8 @@ public class Enemy extends Card {
 	private ResistanceValues resistances;
 	private LifeValues life;
 	private int targetRange;
+	
+	private boolean enraged;
 	
 	private LinkedList<EnemyAbility> abilities;
 	private LinkedList<Modification> modifications;
@@ -58,12 +62,12 @@ public class Enemy extends Card {
 		}
 	}
 
-	public EnemyType getEnemyType() {
-		return enemyType;
+	public EnemySuit getEnemySuit() {
+		return enemySuit;
 	}
 
-	public void setEnemyType(EnemyType enemyType) {
-		this.enemyType = enemyType;
+	public void setEnemySuit(EnemySuit enemyType) {
+		this.enemySuit = enemyType;
 	}
 
 	public boolean isSpecialEnemy() {
@@ -128,7 +132,7 @@ public class Enemy extends Card {
 	 * Checks if the specified Modification already exists, and updates it if necessary.
 	 * If the Modification was not found, a new one is created and the values are updated if necessary
 	 */
-	public boolean updateModification(ModSource modSource, ModType modType,ModTarget modTarget,int value, int sourceID, String sourceName){
+	public boolean updateModification(ModSource modSource, ModType modType,ModTarget modTarget,int value, int sourceID){
 		boolean updated=false;
 		int pos=-1;
 		
@@ -136,6 +140,7 @@ public class Enemy extends Card {
 		for (int i=0;i<modifications.size();i++){
 			if (modifications.get(i).getModType()==modType && 
 				modifications.get(i).getModSource()==modSource &&
+				modifications.get(i).getModTarget()==modTarget &&
 				modifications.get(i).getSourceID()==sourceID){
 				pos=i;
 				break;
@@ -170,7 +175,7 @@ public class Enemy extends Card {
 		}
 		// If the Modification does not exist, create a new one
 		else{
-			modifications.add(new Modification(modSource,modType,modTarget,value,sourceID,sourceName));
+			modifications.add(new Modification(modSource,modType,modTarget,value,sourceID));
 			switch(modTarget){
 				case ATTACK:
 					attack.setValueMod(attack.getValueMod()+value);
@@ -368,6 +373,30 @@ public class Enemy extends Card {
 
 	public void setTargetRange(int targetRange) {
 		this.targetRange = targetRange;
+	}
+
+	public boolean isEnraged() {
+		return enraged;
+	}
+
+	public void setEnraged(boolean enraged) {
+		this.enraged = enraged;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public EnemyType getEnemyType() {
+		return enemyType;
+	}
+
+	public void setEnemyType(EnemyType enemyType) {
+		this.enemyType = enemyType;
 	}
 
 	

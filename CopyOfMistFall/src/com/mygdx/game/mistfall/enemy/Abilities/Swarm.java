@@ -22,7 +22,7 @@ public class Swarm {
 			enemyPos=gc.getHeroes().get(heroIdDest).getHeroEnemies().getEnemyPos(enemy);
 			value=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).getLife().getValueCurrent();
 			if (value>0){
-				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SWARM, ModTarget.ATTACK, value, enemy.getEnemyID(), enemy.getName());
+				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SWARM, ModTarget.ATTACK, value, enemy.getEnemyID());
 			}
 		}
 		// If a Enemy with the SWARM Ability moves from a Hero Area in the Quest Area, remove the SWARM Modification if possible
@@ -41,7 +41,7 @@ public class Swarm {
 		heroIDsource=hero.getHeroID();
 		enemyPos=gc.getHeroes().get(heroIDsource).getHeroEnemies().getEnemyPos(enemy);
 		value=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).getLife().getValueCurrent();
-		gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SWARM, ModTarget.ATTACK, value, enemy.getEnemyID(), enemy.getName());
+		gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.SWARM, ModTarget.ATTACK, value, enemy.getEnemyID());
 	}
 	
 }

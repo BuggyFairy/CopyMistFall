@@ -22,6 +22,10 @@ private List<Enemy> cards;
 		this.cards = cards;
 	}
 	
+	/**
+	 * Returns the position of the "enemy" Object in the HeroEnemies List. 
+	 * If the Enemy was not found return=-1
+	 */
 	public int getEnemyPos (Enemy enemy){
 		int pos=-1;
 		for (int i=0;i<cards.size();i++){

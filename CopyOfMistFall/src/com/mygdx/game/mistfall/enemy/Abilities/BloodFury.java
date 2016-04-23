@@ -22,7 +22,7 @@ public class BloodFury {
 			enemyPos=gc.getHeroes().get(heroIdDest).getHeroEnemies().getEnemyPos(enemy);
 			value=gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).getLife().getWounds();
 			if (value>0){
-				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.BLOOD_FURY, ModTarget.ATTACK, value, enemy.getEnemyID(), enemy.getName());
+				gc.getHeroes().get(heroIdDest).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.BLOOD_FURY, ModTarget.ATTACK, value, enemy.getEnemyID());
 			}
 		}
 		// If a Enemy with the BLOOD_FURY Ability moves from a Hero Area in the Quest Area, remove the BLOOD_FURY Modification if possible
@@ -41,7 +41,7 @@ public class BloodFury {
 		heroIDsource=hero.getHeroID();
 		enemyPos=gc.getHeroes().get(heroIDsource).getHeroEnemies().getEnemyPos(enemy);
 		value=gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).getLife().getWounds();
-		gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.BLOOD_FURY, ModTarget.ATTACK, value, enemy.getEnemyID(), enemy.getName());
+		gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(enemyPos).updateModification(ModSource.ENEMY, ModType.BLOOD_FURY, ModTarget.ATTACK, value, enemy.getEnemyID());
 	}
 	
 }

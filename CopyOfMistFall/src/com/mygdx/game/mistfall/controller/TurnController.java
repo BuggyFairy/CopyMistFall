@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
+import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
-import com.mygdx.game.mistfall.model.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.model.enums.LocationEffectUse;
 import com.mygdx.game.mistfall.model.enums.LocationStatus;
 import com.mygdx.game.mistfall.model.enums.PickControllerCharacters;

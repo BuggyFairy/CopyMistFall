@@ -137,7 +137,7 @@ public class GameSetupController {
 	
 	public int getEnemyPositionDiscard(Enemy enemy){
 		int pos=-1;
-		switch (enemy.getEnemyType()){
+		switch (enemy.getEnemySuit()){
 		case BLUE:
 			for (int i=0;i<blueEnemiesDiscard.size();i++){
 				if (blueEnemiesDiscard.get(i).getEnemyID()==enemy.getEnemyID()){
