@@ -1,5 +1,7 @@
 package com.mygdx.game.mistfall.controller;
 
+import java.util.LinkedList;
+
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.Abilities.BloodFury;
 import com.mygdx.game.mistfall.enemy.Abilities.CursedBolt;
@@ -31,7 +33,9 @@ import com.mygdx.game.mistfall.model.modifications.ModType;
 
 public class EnemyController {	
 	
-	int enemyPos;
+	
+	private int enemyPos;
+	private LinkedList<String> enemyNames=new LinkedList<String>();
 //	int enemyID;
 //	String enemyName;
 //	int heroIdDest;
@@ -417,6 +421,13 @@ public class EnemyController {
 		}
 		
 		return true;
+	}
+	
+	public void addEnemyName(String name){
+		enemyNames.add(name);
+	}
+	public String getEnemyNameByID(int enemyID){
+		return enemyNames.get(enemyID);
 	}
 	
 }

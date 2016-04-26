@@ -259,5 +259,17 @@ public class GameController {
 				}
 			}
 		}
+	}
+
+
+
+	public EnemyController getEnemyController() {
+		return enemyController;
+	}
+
+
+
+	public void setEnemyController(EnemyController enemyController) {
+		this.enemyController = enemyController;
 	}	
 }
