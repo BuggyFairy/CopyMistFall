@@ -29,12 +29,12 @@ public class Reanimate {
 		}
 	}
 	
-	public static void updateEnemyEliminated(GameController gc,Enemy enemy,EnemyArea source,Hero heroSource){
+	public static void updateEnemyEliminated(GameController gc,Enemy enemy,Hero heroSource){
 		
 		int heroIDsource=heroSource.getHeroID();
 		
 		// If the Eliminated Enemy was in a Hero Area and possesses the UNDEAD Keyword
-		if (source==EnemyArea.HERO && enemy.getEnemyKeyword().contains(EnemyKeyword.UNDEAD)){
+		if (enemy.getEnemyKeyword().contains(EnemyKeyword.UNDEAD)){
 			//Check if there is an Enemy with the REANIMATE Ability in the Hero Area
 			for (int i=0;i<gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().size();i++){
 				if (gc.getHeroes().get(heroIDsource).getHeroEnemies().getCards().get(i).searchModification(ModType.REANIMATE)){

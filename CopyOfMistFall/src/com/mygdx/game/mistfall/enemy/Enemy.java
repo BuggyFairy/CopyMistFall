@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
 import com.mygdx.game.mistfall.enemy.enums.EnemyType;
+import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.Conditions;
-import com.mygdx.game.mistfall.model.enums.Vulnerability;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -23,7 +23,7 @@ public class Enemy  {
 	private boolean specialEnemy;
 	private LinkedList<EnemyKeyword> enemyKeyword;
 	private int resolve;
-	private LinkedList<Vulnerability> vulnerability;
+	private LinkedList<EnemyVunerability> vulnerability;
 	private Conditions conditions;
 
 	private AttackValues attack;
@@ -40,7 +40,7 @@ public class Enemy  {
 	
 	public Enemy(){
 		enemyKeyword=new LinkedList<EnemyKeyword>();
-		vulnerability=new LinkedList<Vulnerability>();
+		vulnerability=new LinkedList<EnemyVunerability>();
 		conditions=new Conditions();
 		attack= new AttackValues();
 		resistances=new ResistanceValues();
@@ -56,7 +56,7 @@ public class Enemy  {
 	}
 	
 	
-	public void appendVunerability(Vulnerability v){
+	public void appendVunerability(EnemyVunerability v){
 		if(this.vulnerability != null){
 			this.vulnerability.add(v);
 		}
@@ -90,7 +90,7 @@ public class Enemy  {
 		this.resolve = resolve;
 	}
 
-	public LinkedList<Vulnerability> getVulnerability() {
+	public LinkedList<EnemyVunerability> getVulnerability() {
 		return vulnerability;
 	}
 
@@ -338,25 +338,18 @@ public class Enemy  {
 
 	
 	/**
-	 * @param woundCount
-	 * @param gc
-	 * @return true if the enemy died
-	 * 
-	 * Removes the specified "woundCount" value from the current life of the enemy
-	 * if the enemy has zero or less life left, the resolve count is added to the resolve pool
+	 * Removes the specified "woundCount" value from the current life of the enemy.
+	 * Returns true if the enemy died.
 	 */
-	public boolean applyWounds(int woundCount, GameController gc){
-		boolean enemyDead=false;
+	public boolean applyWounds(int woundCount){
 		// Apply Wounds
 		life.setValueCurrent(life.getValueCurrent()-woundCount);
 		// Check if the Enemy died
 		if (life.getValueCurrent()<=0){
-			// Reward Resolve
-			gc.getGameSetupController().changeResolvePool(resolve);
-			enemyDead=true;
+			return true;
 		}
 		
-		return enemyDead;
+		return false;
 	}
 
 	public int getEnemyID() {

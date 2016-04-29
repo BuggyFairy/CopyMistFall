@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
+import com.mygdx.game.mistfall.enemy.enums.EnemyArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Encounter;
@@ -31,7 +32,7 @@ public class TurnController {
 			gc.moveReinforcementTrack(gc.getActiveEncounter().getReinforcment());
 			
 			//spawn Reinforcement as specified by the Reinforcement track
-			spawnEnemies(gc,gc.getQuestCharter().getReinforcementTrack()[gc.getQuestCharter().getReinforcementTrackPosition()]);
+			gc.getEnemyController().spawnEnemies(gc,gc.getQuestCharter().getReinforcementTrack()[gc.getQuestCharter().getReinforcementTrackPosition()]);
 		}		
 	}
 	
@@ -69,7 +70,7 @@ public class TurnController {
 			}
 			
 			// Disperse enemy's in Quest and Hero areas
-			gc.disperseEnemies();
+			gc.getEnemyController().disperseEnemies(gc);
 			
 			//Apply Location effects from the type ENTER_NEW_LOCATION
 			if (gc.getGameSetupController().getLocationGrid().getLocationAt(gc.getViewController().getSelectedLocation().getCoordinates()).getLocationsEffectUse().contains(LocationEffectUse.ENTER_NEW_LOCATION)){
@@ -92,7 +93,7 @@ public class TurnController {
 		// Setup Encounter
 		if (gc.getActiveEncounter()!=null){
 			// Spawn initial Enemies
-			spawnEnemies(gc,gc.getActiveEncounter().getInitialEnemyCount());
+			gc.getEnemyController().spawnEnemies(gc,gc.getActiveEncounter().getInitialEnemyCount());
 			// Follow special setup rules of Encounter
 			// TODO: special setup rules
 		}
@@ -125,21 +126,15 @@ public class TurnController {
 			}
 			// If there is 1 hero in the List, the Enemy at the top of the list enter the hero's area
 			if (heroesWithHighestFocus.size()==1){
-				// Add Enemy from the top of the quest area list to the hero's area
-				gc.getHeroes().get(heroesWithHighestFocus.get(0).getHeroID()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
-				gc.getQuestArea().getQuestAreaEnemies().remove(0);
-				// Halve the Hero Focus
-				gc.getHeroes().get(heroesWithHighestFocus.get(0).getHeroID()).halveFocus();
+				// Move Enemy, halve hero focus and update enemies
+				gc.getEnemyController().pursuitHero(gc, heroesWithHighestFocus.get(0));
 			}
 			// If there are 2 or more heroes in the list, the players must decide which hero will be pursuited by the enemy at the top of the list
 			else if (heroesWithHighestFocus.size()>1){
 				// Get Chosen Hero of the players
 				Hero selectedHero = heroesWithHighestFocus.get(gc.getViewController().pickCharacter(PickControllerCharacters.HEROES, heroesWithHighestFocus, null));
-				// Add Enemy from the top of the quest area list to the hero's area
-				gc.getHeroes().get(selectedHero.getHeroID()).getHeroEnemies().getCards().add(gc.getQuestArea().getQuestAreaEnemies().get(0));
-				gc.getQuestArea().getQuestAreaEnemies().remove(0);
-				// Halve the Hero Focus
-				gc.getHeroes().get(selectedHero.getHeroID()).halveFocus();
+				// Move Enemy, halve hero focus and update enemies
+				gc.getEnemyController().pursuitHero(gc,selectedHero);	
 			}
 			// If there is no hero in the list the pursuitPhase ends
 			else{
@@ -251,7 +246,6 @@ public class TurnController {
 		List<Enemy> enemiesWithConditions = new LinkedList<Enemy>();
 		Enemy selectedEnemy;
 		int enemyPos;
-		boolean enemyDead;
 		// Check All Heroes
 		for (Hero h: gc.getHeroes()){
 			enemiesWithConditions.clear();
@@ -264,7 +258,6 @@ public class TurnController {
 			// Resolve enemy conditions if there are any
 			while (enemiesWithConditions.isEmpty()==false){
 				selectedEnemy=enemiesWithConditions.get(gc.getViewController().pickCharacter(PickControllerCharacters.ENEMIES_HERO_AREA, enemiesWithConditions, h));
-				enemyDead=false;
 				enemyPos=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getEnemyPos(selectedEnemy);
 				
 				// ERROR: If the selected enemy is not in the Heros list go to the next enemy
@@ -272,38 +265,41 @@ public class TurnController {
 					enemiesWithConditions.remove(selectedEnemy);
 					continue;
 				}
-				
-				// Handle burning Conditions
-				for (int i=1; i<=selectedEnemy.getConditions().getBurning();i++){
-					// Apply Wounds and check if the Enemy died
-					enemyDead=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().get(enemyPos).applyWounds(1, gc);
-					if (enemyDead){
-						// Remove Enemy from list
-						gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().remove(enemyPos);
-						enemiesWithConditions.remove(selectedEnemy);
-						break;
-					}
-				}
-				// Go to the next enemy if the current enemy died
-				if (enemyDead){
-					continue;
-				}
-				
-				// Handle poison Conditions
-				for (int i=1; i<=selectedEnemy.getConditions().getPoison();i++){
-					// Apply Wounds and check if the Enemy died
-					enemyDead=gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().get(enemyPos).applyWounds(1, gc);
-					if (enemyDead){
-						// Remove Enemy from list
-						gc.getHeroes().get(h.getHeroID()).getHeroEnemies().getCards().remove(enemyPos);
-						enemiesWithConditions.remove(selectedEnemy);
-						break;
-					}
-				}
+				// Resolve Condition effects and Discard 1 Condition if possible
+				gc.getEnemyController().resolveCondition(gc, selectedEnemy, h, EnemyArea.HERO);
+				enemiesWithConditions.remove(selectedEnemy);
+			}
+			// Resolve Hero Conditions
+			// TODO
+		}
+		// Check Enemies in the Quest Area
+		enemiesWithConditions.clear();
+		// Check all enemies in the Quest Area for conditions and add to list "enemiesWithConditions"
+		for (Enemy e: gc.getQuestArea().getQuestAreaEnemies()){
+			if (e.getConditions().getConditionCount()>0){
+				enemiesWithConditions.add(e);
 			}
 		}
-		
+		// Resolve enemy conditions if there are any
+		while (enemiesWithConditions.isEmpty()==false){
+			selectedEnemy=enemiesWithConditions.get(gc.getViewController().pickCharacter(PickControllerCharacters.ENEMIES_QUEST_AREA, enemiesWithConditions, null));
+			enemyPos=gc.getQuestArea().getEnemyPos(selectedEnemy);
+			// ERROR: If the selected enemy is not in the Heros list go to the next enemy
+			if (enemyPos==-1){
+				enemiesWithConditions.remove(selectedEnemy);
+				continue;
+			}
+			// Resolve Condition effects and Discard 1 Condition if possible
+			gc.getEnemyController().resolveCondition(gc, selectedEnemy, null, EnemyArea.QUEST);
+			enemiesWithConditions.remove(selectedEnemy);
+		}
 	}
+	
+	
+	
+	
+	
+	
 	
 //	public void defencePhase(List<Hero> heroes){
 //		Hero activeHero;
@@ -340,155 +336,7 @@ public class TurnController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * @param gc, spawnEnemiesCount
-	 * 		   false if spawning was not finished
-	 * 
-	 * draw specified number of enemies from the type of the active Encounter if possible and apply time penalty if necessary 
-	 */
-	public void spawnEnemies(GameController gc, int spawnEnemiesCount){
-	
-		int shuffleCount=0;
-		boolean timePenalty=false;
-		
-		// Draw Enemies till all Enemies have been drawn or the time penalty kicks in (Because Enemies can't be drawn)
-		while(spawnEnemiesCount != 0 && timePenalty==false){
-			switch(gc.getActiveEncounter().getEnemyType()){	
-				// Draw from the blue enemy deck
-				case BLUE :
-					// shuffle discard pile and form new deck if the deck is empty
-					if(gc.getGameSetupController().getBlueEnemies().isEmpty()){
-						gc.getGameSetupController().setBlueEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getBlueEnemiesDiscard()));
-						shuffleCount++;				
-					}
-					// Draw enemy with any Keyword
-					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){
-						gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getBlueEnemies().get(0));
-						gc.getGameSetupController().getBlueEnemies().remove(0);
-						spawnEnemiesCount--;
-					}
-					// Draw enemy with specified Keyword
-					else{
-						if(gc.getGameSetupController().getBlueEnemies().get(0).getEnemyKeyword().contains(gc.getActiveEncounter().getEnemyKeyword())){
-							gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getBlueEnemies().get(0));
-							gc.getGameSetupController().getBlueEnemies().remove(0);
-							spawnEnemiesCount--;
-						}
-						else{
-							gc.getGameSetupController().getBlueEnemiesDiscard().add(gc.getGameSetupController().getBlueEnemies().get(0));
-							gc.getGameSetupController().getBlueEnemies().remove(0);
-						}
-					}
-					// If the Deck and the Discard pile from the selected Enemy type is empty set time Penalty and stop drawing
-					if(gc.getGameSetupController().getBlueEnemies().isEmpty() && gc.getGameSetupController().getBlueEnemiesDiscard().isEmpty()){
-						timePenalty=true;
-					}
-					break;
-				// Draw from the red enemy deck	
-				case RED :
-					// shuffle discard pile and form new deck if the deck is empty
-					if(gc.getGameSetupController().getRedEnemies().isEmpty()){
-						gc.getGameSetupController().setRedEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getRedEnemiesDiscard()));
-						shuffleCount++;
-					}
-					// Draw enemy with any Keyword
-					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){
-						gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getRedEnemies().get(0));
-						gc.getGameSetupController().getRedEnemies().remove(0);
-						spawnEnemiesCount--;
-					}
-					// Draw enemy with specified Keyword
-					else{
-						if(gc.getGameSetupController().getRedEnemies().get(0).getEnemyKeyword().contains(gc.getActiveEncounter().getEnemyKeyword())){
-							gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getRedEnemies().get(0));
-							gc.getGameSetupController().getRedEnemies().remove(0);
-							spawnEnemiesCount--;
-						}
-						else{
-							gc.getGameSetupController().getRedEnemiesDiscard().add(gc.getGameSetupController().getRedEnemies().get(0));
-							gc.getGameSetupController().getRedEnemies().remove(0);
-						}
-					}
-					// If the Deck and the Discard pile from the selected Enemy type is empty set time Penalty and stop drawing
-					if(gc.getGameSetupController().getRedEnemies().isEmpty() && gc.getGameSetupController().getRedEnemiesDiscard().isEmpty()){
-						timePenalty=true;
-					}
-					break;
-				// Draw from the green enemy deck
-				case GREEN : 
-					// shuffle discard pile and form new deck if the deck is empty
-					if(gc.getGameSetupController().getGreenEnemies().isEmpty()){
-						gc.getGameSetupController().setGreenEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getGreenEnemiesDiscard()));
-						shuffleCount++;
-					}
-					// Draw enemy with any Keyword
-					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){
-						gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getGreenEnemies().get(0));
-						gc.getGameSetupController().getGreenEnemies().remove(0);
-						spawnEnemiesCount--;
-					}
-					// Draw enemy with specified Keyword
-					else{
-						if(gc.getGameSetupController().getGreenEnemies().get(0).getEnemyKeyword().contains(gc.getActiveEncounter().getEnemyKeyword())){
-							gc.getQuestArea().getQuestAreaEnemies().add(gc.getGameSetupController().getGreenEnemies().get(0));
-							gc.getGameSetupController().getGreenEnemies().remove(0);
-							spawnEnemiesCount--;
-						}
-						else{
-							gc.getGameSetupController().getGreenEnemiesDiscard().add(gc.getGameSetupController().getGreenEnemies().get(0));
-							gc.getGameSetupController().getGreenEnemies().remove(0);
-						}
-					}
-					// If the Deck and the Discard pile from the selected Enemy type is empty set time Penalty and stop drawing
-					if(gc.getGameSetupController().getGreenEnemies().isEmpty() && gc.getGameSetupController().getGreenEnemiesDiscard().isEmpty()){
-						timePenalty=true;
-					}
-					break;
-					
-				default :
-					//TODO: Exception handling
-					break;
-				}	
-			// When the enemy Deck was shuffled 2 times or more set time penalty and stop drawing
-			if(shuffleCount>=2){
-				timePenalty=true;
-			}
-		}
-		
-		// Apply time penalty and shuffle all enemy Decks
-		if (timePenalty==true){
-			//Shuffle Blue enemy cards
-			gc.getGameSetupController().setBlueEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getBlueEnemiesDiscard()));
-			//Shuffle Red enemy cards
-			gc.getGameSetupController().setRedEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getRedEnemiesDiscard()));
-			//Shuffle Green enemy cards
-			gc.getGameSetupController().setGreenEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getGreenEnemiesDiscard()));
-			//Move Timetrack to steps to the right
-			gc.moveTimeTrack(2);
-		}
-	}
-	
+
 	
 	
 	/**

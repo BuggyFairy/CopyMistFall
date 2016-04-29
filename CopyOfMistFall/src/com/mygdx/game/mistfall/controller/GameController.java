@@ -7,7 +7,6 @@ import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.QuestCharter;
-import com.mygdx.game.mistfall.model.modifications.ModType;
 
 public class GameController {
 
@@ -211,57 +210,6 @@ public class GameController {
 	public void setTravelPhaseCompleted(boolean travelPhaseCompleted) {
 		this.travelPhaseCompleted = travelPhaseCompleted;
 	}
-	
-
-	/**
-	 * Disperse all Enemies without the "Relentless" Ability from the Quest area and all Hero areas
-	 */
-	public void disperseEnemies(){
-		int i=0;
-		Boolean isRelentless;
-		// Disperse Quest Area
-		while(i<questArea.getQuestAreaEnemies().size()){
-			switch (questArea.getQuestAreaEnemies().get(i).getEnemySuit()){
-				case BLUE:
-					gameSetupController.getBlueEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
-				break;
-				case RED:
-					gameSetupController.getRedEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
-				break;
-				case GREEN:
-					gameSetupController.getGreenEnemiesDiscard().add(questArea.getQuestAreaEnemies().get(i));
-				break;
-			}
-			questArea.getQuestAreaEnemies().remove(i);	
-		}
-		// Disperse Hero Area's
-		for (int j=0;j<heroes.size();j++){
-			i=0;
-			while(i<heroes.get(j).getHeroEnemies().getCards().size()){
-				// If the Current Enemy does no possess the RELENTLESS Modification, discard him
-				if (heroes.get(j).getHeroEnemies().getCards().get(i).searchModification(ModType.RELENTLESS)==false){
-					switch (heroes.get(j).getHeroEnemies().getCards().get(i).getEnemySuit()){
-						case BLUE:
-							gameSetupController.getBlueEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
-						break;
-						case RED:
-							gameSetupController.getRedEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
-						break;
-						case GREEN:
-							gameSetupController.getGreenEnemiesDiscard().add(heroes.get(j).getHeroEnemies().getCards().get(i));
-						break;
-					}
-					heroes.get(j).getHeroEnemies().getCards().remove(i);
-				}
-				// If RELENTLESS move on to the next enemy
-				else{
-					i++;
-				}
-			}
-		}
-	}
-
-
 
 	public EnemyController getEnemyController() {
 		return enemyController;

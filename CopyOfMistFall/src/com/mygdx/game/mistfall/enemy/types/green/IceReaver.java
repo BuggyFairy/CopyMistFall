@@ -1,4 +1,4 @@
-package com.mygdx.game.mistfall.enemy.types.blue;
+package com.mygdx.game.mistfall.enemy.types.green;
 
 import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
@@ -10,44 +10,40 @@ import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
 import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
 
-public class VampireBatSwarm extends Enemy {
+public class IceReaver extends Enemy {
 
-	public VampireBatSwarm(int ID, GameController gc)
+	public IceReaver(int ID, GameController gc)
 	{
 		// General
 		setEnemyID(ID);
-		setName("Vampire Bat Swarm");
+		setName("Ice Reaver");
 		gc.getEnemyController().addEnemyName(getName());
-		setEnemySuit(EnemySuit.BLUE);
-		setResolve(1);
+		setEnemySuit(EnemySuit.GREEN);
+		setResolve(2);
 		setSpecialEnemy(false);
 		setEnraged(false);
 		setTargetRange(1);
 		// Keywords
 		appendEnemyKeyword(EnemyKeyword.BEAST);
-		appendEnemyKeyword(EnemyKeyword.PIERCING);
-		appendEnemyKeyword(EnemyKeyword.UNDEAD);
-		appendEnemyKeyword(EnemyKeyword.VAMPIRE);
+		appendEnemyKeyword(EnemyKeyword.FROST);
+		appendEnemyKeyword(EnemyKeyword.RENDING);
 		// Vulnerabilities
 		appendVunerability(EnemyVunerability.FLAME);
-		appendVunerability(EnemyVunerability.LIGHTNING);
 		// Life values
-		getLife().setValueBase(3);
+		getLife().setValueBase(4);
 		getLife().setValueMod(getLife().getValueBase());
 		getLife().setValueCurrent(getLife().getValueBase());
 		// Attack values
 		getAttack().setType(AttackType.PHYSICAL);
-		getAttack().setValueBase(0);
+		getAttack().setValueBase(4);
 		getAttack().setValueMod(getAttack().getValueBase());
 		// Resistances Values
-		getResistances().setPhysicalResBase(1);
+		getResistances().setPhysicalResBase(3);
 		getResistances().setPhysicalResMod(getResistances().getPhysicalResBase());
-		getResistances().setMagicalResBase(0);
+		getResistances().setMagicalResBase(1);
 		getResistances().setMagicalResMod(getResistances().getMagicalResBase());
 		// Abilities
-		getAbilities().add(new EnemyAbility(EnemyAbilityType.SWARM,EnemyAbilityArea.HERO));
-		getAbilities().add(new EnemyAbility(EnemyAbilityType.VAMPIRIC,EnemyAbilityArea.HERO));
-		
+		getAbilities().add(new EnemyAbility(EnemyAbilityType.SLOW,EnemyAbilityArea.HERO));
 	}
 
 }

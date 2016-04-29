@@ -1,8 +1,41 @@
 package com.mygdx.game.mistfall.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
+import com.mygdx.game.mistfall.enemy.types.blue.BloodscorneVampire;
+import com.mygdx.game.mistfall.enemy.types.blue.BonesorrowMagus;
+import com.mygdx.game.mistfall.enemy.types.blue.BonesorrowShooter;
+import com.mygdx.game.mistfall.enemy.types.blue.BonesorrowWarrior;
+import com.mygdx.game.mistfall.enemy.types.blue.CursedWalker;
+import com.mygdx.game.mistfall.enemy.types.blue.RavenousDraugr;
+import com.mygdx.game.mistfall.enemy.types.blue.UndeadLoremaster;
+import com.mygdx.game.mistfall.enemy.types.blue.VampireBatSwarm;
+import com.mygdx.game.mistfall.enemy.types.blue.VampireHound;
+import com.mygdx.game.mistfall.enemy.types.blue.VengefulBanshee;
+import com.mygdx.game.mistfall.enemy.types.green.DireWolf;
+import com.mygdx.game.mistfall.enemy.types.green.Fellstalker;
+import com.mygdx.game.mistfall.enemy.types.green.GhorenBloodTracker;
+import com.mygdx.game.mistfall.enemy.types.green.GhorenRagecaller;
+import com.mygdx.game.mistfall.enemy.types.green.GhorenSlinger;
+import com.mygdx.game.mistfall.enemy.types.green.GhorenSmallhorn;
+import com.mygdx.game.mistfall.enemy.types.green.GhorenWarrior;
+import com.mygdx.game.mistfall.enemy.types.green.IceReaver;
+import com.mygdx.game.mistfall.enemy.types.green.TrackerHound;
+import com.mygdx.game.mistfall.enemy.types.green.WildIcehound;
+import com.mygdx.game.mistfall.enemy.types.green.WildlandsShaman;
+import com.mygdx.game.mistfall.enemy.types.red.BlackCovenCaster;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodAmbusher;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodAssassin;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodChangeling;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodCuttpurse;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodFighter;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodHarasser;
+import com.mygdx.game.mistfall.enemy.types.red.BlackwoodMagehunter;
+import com.mygdx.game.mistfall.enemy.types.red.RenegadeFlamecaster;
+import com.mygdx.game.mistfall.enemy.types.red.TwistedCursebearer;
+import com.mygdx.game.mistfall.enemy.types.red.TwistedLasher;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
@@ -28,6 +61,158 @@ public class GameSetupController {
 	private List<Enemy> greenEnemiesDiscard;
 	private List<Enemy> redEnemiesDiscard;
 	private List<Enemy> blueEnemiesDiscard;
+	
+	public GameSetupController(GameController gc){
+		int enemyID=1;
+		int i;
+		
+		// Add Red Enemies
+		redEnemies=new LinkedList<Enemy>();
+		for (i=0;i<6;i++){
+			redEnemies.add(new RenegadeFlamecaster(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<6;i++){
+			redEnemies.add(new BlackwoodFighter(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<4;i++){
+			redEnemies.add(new BlackwoodAssassin(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackwoodAmbusher(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackwoodHarasser(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackwoodCuttpurse(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackwoodMagehunter(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackwoodChangeling(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new BlackCovenCaster(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new TwistedLasher(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			redEnemies.add(new TwistedCursebearer(enemyID,gc));
+			enemyID++;
+		}
+		
+		
+		// Add Green Enemies
+		greenEnemies=new LinkedList<Enemy>();
+		for (i=0;i<6;i++){
+			greenEnemies.add(new GhorenWarrior(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<6;i++){
+			greenEnemies.add(new WildIcehound(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<4;i++){
+			greenEnemies.add(new DireWolf(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new TrackerHound(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new GhorenBloodTracker(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new GhorenSlinger(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new GhorenSmallhorn(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new GhorenRagecaller(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new WildlandsShaman(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new Fellstalker(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			greenEnemies.add(new IceReaver(enemyID,gc));
+			enemyID++;
+		}
+		
+		// Add Blue Enemies
+		blueEnemies=new LinkedList<Enemy>();
+		for (i=0;i<6;i++){
+			blueEnemies.add(new BonesorrowShooter(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<6;i++){
+			blueEnemies.add(new CursedWalker(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<6;i++){
+			blueEnemies.add(new BonesorrowWarrior(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<4;i++){
+			blueEnemies.add(new VampireBatSwarm(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new VampireHound(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new BloodscorneVampire(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new RavenousDraugr(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new VengefulBanshee(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new UndeadLoremaster(enemyID,gc));
+			enemyID++;
+		}
+		for (i=0;i<3;i++){
+			blueEnemies.add(new BonesorrowMagus(enemyID,gc));
+			enemyID++;
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

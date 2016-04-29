@@ -10,13 +10,13 @@ import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
 import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
 
-public class VampireBatSwarm extends Enemy {
+public class VengefulBanshee extends Enemy {
 
-	public VampireBatSwarm(int ID, GameController gc)
+	public VengefulBanshee(int ID, GameController gc)
 	{
 		// General
 		setEnemyID(ID);
-		setName("Vampire Bat Swarm");
+		setName("VengefulBanshee");
 		gc.getEnemyController().addEnemyName(getName());
 		setEnemySuit(EnemySuit.BLUE);
 		setResolve(1);
@@ -24,30 +24,27 @@ public class VampireBatSwarm extends Enemy {
 		setEnraged(false);
 		setTargetRange(1);
 		// Keywords
-		appendEnemyKeyword(EnemyKeyword.BEAST);
-		appendEnemyKeyword(EnemyKeyword.PIERCING);
+		appendEnemyKeyword(EnemyKeyword.SORCERER);
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
-		appendEnemyKeyword(EnemyKeyword.VAMPIRE);
+		appendEnemyKeyword(EnemyKeyword.WRAITH);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.FLAME);
-		appendVunerability(EnemyVunerability.LIGHTNING);
+		appendVunerability(EnemyVunerability.ARCANE);
+		appendVunerability(EnemyVunerability.DIVINE);
 		// Life values
-		getLife().setValueBase(3);
+		getLife().setValueBase(2);
 		getLife().setValueMod(getLife().getValueBase());
 		getLife().setValueCurrent(getLife().getValueBase());
 		// Attack values
-		getAttack().setType(AttackType.PHYSICAL);
-		getAttack().setValueBase(0);
+		getAttack().setType(AttackType.MAGICAL);
+		getAttack().setValueBase(2);
 		getAttack().setValueMod(getAttack().getValueBase());
 		// Resistances Values
 		getResistances().setPhysicalResBase(1);
 		getResistances().setPhysicalResMod(getResistances().getPhysicalResBase());
-		getResistances().setMagicalResBase(0);
+		getResistances().setMagicalResBase(2);
 		getResistances().setMagicalResMod(getResistances().getMagicalResBase());
 		// Abilities
-		getAbilities().add(new EnemyAbility(EnemyAbilityType.SWARM,EnemyAbilityArea.HERO));
-		getAbilities().add(new EnemyAbility(EnemyAbilityType.VAMPIRIC,EnemyAbilityArea.HERO));
-		
+		getAbilities().add(new EnemyAbility(EnemyAbilityType.VENGEFUL_SHRIEK,EnemyAbilityArea.HERO));
 	}
 
 }
