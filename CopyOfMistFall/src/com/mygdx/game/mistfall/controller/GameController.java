@@ -7,21 +7,28 @@ import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.QuestCharter;
+import com.mygdx.game.mistfall.model.enums.GamePhase;
 
 public class GameController {
 
 	
 	private List<Hero> heroes;
-	private int activeHero;
 	private boolean travelPhaseCompleted;
 	private QuestArea questArea;
 	private Encounter activeEncounter;
 	private TurnController turnController;
 	private GameSetupController gameSetupController;
-	private Location activeLovation;
 	private QuestCharter questCharter;
 	private ViewController viewController;
 	private EnemyController enemyController;
+	
+	private int activeHero;
+	private Location activeLovation;
+	private GamePhase currentGamePhase;
+	
+	
+	
+	
 	
 	public GameController(){
 		
@@ -219,5 +226,17 @@ public class GameController {
 
 	public void setEnemyController(EnemyController enemyController) {
 		this.enemyController = enemyController;
+	}
+
+
+
+	public GamePhase getCurrentGamePhase() {
+		return currentGamePhase;
+	}
+
+
+
+	public void setCurrentGamePhase(GamePhase currentGamePhase) {
+		this.currentGamePhase = currentGamePhase;
 	}	
 }

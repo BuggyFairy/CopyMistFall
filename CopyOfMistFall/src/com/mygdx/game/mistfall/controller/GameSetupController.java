@@ -62,6 +62,7 @@ public class GameSetupController {
 	private List<Enemy> redEnemiesDiscard;
 	private List<Enemy> blueEnemiesDiscard;
 	
+	@SuppressWarnings("unchecked")
 	public GameSetupController(GameController gc){
 		int enemyID=1;
 		int i;
@@ -112,7 +113,6 @@ public class GameSetupController {
 			redEnemies.add(new TwistedCursebearer(enemyID,gc));
 			enemyID++;
 		}
-		
 		
 		// Add Green Enemies
 		greenEnemies=new LinkedList<Enemy>();
@@ -203,6 +203,14 @@ public class GameSetupController {
 			blueEnemies.add(new BonesorrowMagus(enemyID,gc));
 			enemyID++;
 		}
+		
+		
+		
+		// Shuffle all Enemy Decks
+		greenEnemies=(List<Enemy>)CardController.shuffleCards(greenEnemies);
+		blueEnemies=(List<Enemy>)CardController.shuffleCards(blueEnemies);
+		redEnemies=(List<Enemy>)CardController.shuffleCards(redEnemies);
+		
 	}
 	
 	

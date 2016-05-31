@@ -4,8 +4,8 @@ import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class BonesorrowWarrior extends Enemy {
 
@@ -26,8 +26,8 @@ public class BonesorrowWarrior extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.SKELETON);
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.BLUNT);
-		appendVunerability(EnemyVunerability.FLAME);
+		appendVunerability(Keyword.BLUNT);
+		appendVunerability(Keyword.FLAME);
 		// Life values
 		getLife().setValueBase(4);
 		getLife().setValueMod(getLife().getValueBase());

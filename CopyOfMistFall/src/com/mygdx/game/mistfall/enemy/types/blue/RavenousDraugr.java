@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class RavenousDraugr extends Enemy {
 
@@ -30,7 +30,7 @@ public class RavenousDraugr extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		appendEnemyKeyword(EnemyKeyword.ZOMBIE);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.FLAME);
+		appendVunerability(Keyword.FLAME);
 		// Life values
 		getLife().setValueBase(4);
 		getLife().setValueMod(getLife().getValueBase());

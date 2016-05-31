@@ -2,13 +2,13 @@ package com.mygdx.game.mistfall.enemy;
 
 import java.util.LinkedList;
 
-import com.mygdx.game.mistfall.controller.GameController;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
 import com.mygdx.game.mistfall.enemy.enums.EnemyType;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.Conditions;
+import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 import com.mygdx.game.mistfall.model.modifications.ModSource;
 import com.mygdx.game.mistfall.model.modifications.ModTarget;
 import com.mygdx.game.mistfall.model.modifications.ModType;
@@ -16,6 +16,7 @@ import com.mygdx.game.mistfall.model.modifications.Modification;
 
 public class Enemy  {
 	
+	// {{ Attributes
 	private int enemyID;
 	private String name;
 	private EnemySuit enemySuit;
@@ -23,12 +24,13 @@ public class Enemy  {
 	private boolean specialEnemy;
 	private LinkedList<EnemyKeyword> enemyKeyword;
 	private int resolve;
-	private LinkedList<EnemyVunerability> vulnerability;
+	private LinkedList<Keyword> vulnerability;
 	private Conditions conditions;
 
 	private AttackValues attack;
 	private ResistanceValues resistances;
 	private LifeValues life;
+	
 	private int targetRange;
 	
 	private boolean enraged;
@@ -36,89 +38,142 @@ public class Enemy  {
 	private LinkedList<EnemyAbility> abilities;
 	private LinkedList<Modification> modifications;
 	
+	private boolean selected;
+	// }}
 	
-	
+	// {{ Constructor
 	public Enemy(){
 		enemyKeyword=new LinkedList<EnemyKeyword>();
-		vulnerability=new LinkedList<EnemyVunerability>();
+		vulnerability=new LinkedList<Keyword>();
 		conditions=new Conditions();
 		attack= new AttackValues();
 		resistances=new ResistanceValues();
 		life=new LifeValues();
 		abilities=new LinkedList<EnemyAbility>();
 		modifications=new LinkedList<Modification>();
+		setSelected(false);
 	}
+	// }}
+	
+	// {{ Getters & Setters
+	public int getEnemyID() {
+		return enemyID;
+	}
+	public void setEnemyID(int enemyID) {
+		this.enemyID = enemyID;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public EnemySuit getEnemySuit() {
+		return enemySuit;
+	}
+	public void setEnemySuit(EnemySuit enemySuit) {
+		this.enemySuit = enemySuit;
+	}
+	public EnemyType getEnemyType() {
+		return enemyType;
+	}
+	public void setEnemyType(EnemyType enemyType) {
+		this.enemyType = enemyType;
+	}
+	public boolean isSpecialEnemy() {
+		return specialEnemy;
+	}
+	public void setSpecialEnemy(boolean specialEnemy) {
+		this.specialEnemy = specialEnemy;
+	}
+	public LinkedList<EnemyKeyword> getEnemyKeyword() {
+		return enemyKeyword;
+	}
+	public void setEnemyKeyword(LinkedList<EnemyKeyword> enemyKeyword) {
+		this.enemyKeyword = enemyKeyword;
+	}
+	public int getResolve() {
+		return resolve;
+	}
+	public void setResolve(int resolve) {
+		this.resolve = resolve;
+	}
+	public LinkedList<Keyword> getVulnerability() {
+		return vulnerability;
+	}
+	public void setVulnerability(LinkedList<Keyword> vulnerability) {
+		this.vulnerability = vulnerability;
+	}
+	public Conditions getConditions() {
+		return conditions;
+	}
+	public void setConditions(Conditions conditions) {
+		this.conditions = conditions;
+	}
+	public AttackValues getAttack() {
+		return attack;
+	}
+	public void setAttack(AttackValues attack) {
+		this.attack = attack;
+	}
+	public ResistanceValues getResistances() {
+		return resistances;
+	}
+	public void setResistances(ResistanceValues resistances) {
+		this.resistances = resistances;
+	}
+	public LifeValues getLife() {
+		return life;
+	}
+	public void setLife(LifeValues life) {
+		this.life = life;
+	}
+	public int getTargetRange() {
+		return targetRange;
+	}
+	public void setTargetRange(int targetRange) {
+		this.targetRange = targetRange;
+	}
+	public boolean isEnraged() {
+		return enraged;
+	}
+	public void setEnraged(boolean enraged) {
+		this.enraged = enraged;
+	}
+	public LinkedList<EnemyAbility> getAbilities() {
+		return abilities;
+	}
+	public void setAbilities(LinkedList<EnemyAbility> abilities) {
+		this.abilities = abilities;
+	}
+	public LinkedList<Modification> getModifications() {
+		return modifications;
+	}
+	public void setModifications(LinkedList<Modification> modifications) {
+		this.modifications = modifications;
+	}
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	// }}
+
+	// {{ Other Methods
 	
 	public void appendEnemyKeyword(EnemyKeyword ek){
 		if(this.enemyKeyword != null){
 			this.enemyKeyword.add(ek);
 		}
 	}
-	
-	
-	public void appendVunerability(EnemyVunerability v){
+
+	public void appendVunerability(Keyword v){
 		if(this.vulnerability != null){
 			this.vulnerability.add(v);
 		}
 	}
-
-	public EnemySuit getEnemySuit() {
-		return enemySuit;
-	}
-
-	public void setEnemySuit(EnemySuit enemyType) {
-		this.enemySuit = enemyType;
-	}
-
-	public boolean isSpecialEnemy() {
-		return specialEnemy;
-	}
-
-	public void setSpecialEnemy(boolean specialEnemy) {
-		this.specialEnemy = specialEnemy;
-	}
-
-	public LinkedList<EnemyKeyword> getEnemyKeyword() {
-		return enemyKeyword;
-	}
-
-	public int getResolve() {
-		return resolve;
-	}
-
-	public void setResolve(int resolve) {
-		this.resolve = resolve;
-	}
-
-	public LinkedList<EnemyVunerability> getVulnerability() {
-		return vulnerability;
-	}
-
-	public Conditions getConditions() {
-		return conditions;
-	}
-
-	public AttackValues getAttack() {
-		return attack;
-	}
-
-	public ResistanceValues getResistances() {
-		return resistances;
-	}
-
-	public LifeValues getLife() {
-		return life;
-	}
-
-	
-	public LinkedList<EnemyAbility> getAbilities(){
-		return abilities;
-	}
-	
-	public LinkedList<Modification> getModifications() {
-		return modifications;
-	}
-	
 	
 	/**
 	 * @param modSource
@@ -326,72 +381,36 @@ public class Enemy  {
 		return abilityFound;
 	}
 
-
-//	public String toString(){
-//		String text;
-//		text = "This Enemy contains: \n"+ "Name: "+getName()+"\nLife: "+getLife()+"\nAttack Type: "+ getAttackType().toString()+
-//				"\nAttack Value: "+getAttackValue()+"\nPhysical Resistance: "+getPhysicalRes()+"\nMagical Resistance: "+getMagicalRes()+
-//				"\nResolve: "+getResolve()+"\nEnemy Type: "+getEnemyType().toString()+"\nEnemy Keywords: "+getEnemyKeyword().toString()+
-//				"\nVunerabilities: "+getVunerability().toString();
-//		return text;
-//	}
-
-	
 	/**
 	 * Removes the specified "woundCount" value from the current life of the enemy.
 	 * Returns true if the enemy died.
 	 */
-	public boolean applyWounds(int woundCount){
+	public void applyWounds(int woundCount){
 		// Apply Wounds
 		life.setValueCurrent(life.getValueCurrent()-woundCount);
-		// Check if the Enemy died
-		if (life.getValueCurrent()<=0){
-			return true;
+	}
+	
+	public void applyDamage(int damageCount, AttackType attackType){
+		
+		switch (attackType){
+			case PHYSICAL:
+				if ((resistances.getPhysicalResMod()-damageCount)<0){
+					life.setValueCurrent(life.getValueCurrent()+resistances.getPhysicalResMod()-damageCount);
+				}
+			break;
+			
+			case MAGICAL:
+				if ((resistances.getMagicalResMod()-damageCount)<0){
+					life.setValueCurrent(life.getValueCurrent()+resistances.getMagicalResMod()-damageCount);
+				}
+			break;
+			
+			default:
+			break;
 		}
 		
-		return false;
 	}
 
-	public int getEnemyID() {
-		return enemyID;
-	}
-
-	public void setEnemyID(int enemyID) {
-		this.enemyID = enemyID;
-	}
-
-	public int getTargetRange() {
-		return targetRange;
-	}
-
-	public void setTargetRange(int targetRange) {
-		this.targetRange = targetRange;
-	}
-
-	public boolean isEnraged() {
-		return enraged;
-	}
-
-	public void setEnraged(boolean enraged) {
-		this.enraged = enraged;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public EnemyType getEnemyType() {
-		return enemyType;
-	}
-
-	public void setEnemyType(EnemyType enemyType) {
-		this.enemyType = enemyType;
-	}
-
+	// }}
 	
-
 }

@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class VampireHound extends Enemy {
 
@@ -30,8 +30,8 @@ public class VampireHound extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		appendEnemyKeyword(EnemyKeyword.VAMPIRE);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.FLAME);
-		appendVunerability(EnemyVunerability.LIGHTNING);
+		appendVunerability(Keyword.FLAME);
+		appendVunerability(Keyword.LIGHTNING);
 		// Life values
 		getLife().setValueBase(3);
 		getLife().setValueMod(getLife().getValueBase());

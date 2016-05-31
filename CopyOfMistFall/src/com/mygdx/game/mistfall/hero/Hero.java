@@ -3,7 +3,7 @@ package com.mygdx.game.mistfall.hero;
 import java.util.LinkedList;
 
 import com.mygdx.game.mistfall.model.Conditions;
-import com.mygdx.game.mistfall.model.enums.GearKeyword;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 import com.mygdx.game.mistfall.model.modifications.Modification;
 
 public class Hero {
@@ -15,13 +15,14 @@ public class Hero {
 		private int drawLimit;
 		//private boolean didTurn;
 		//private boolean isActive;
+		private int regularActionsLeft;
 		private Deck deck;
 		private DiscardPile discardPile;
 		private BurialPile burialPile;
 		private Hand hand;
-		private GearAndFeats gearAndFeats;
+		private HeroArea gearAndFeats;
 		private HeroEnemies heroEnemies;
-		private LinkedList<GearKeyword> gearProficiencies;
+		private LinkedList<Keyword> gearProficiencies;
 		private Conditions conditions;
 		
 		private LinkedList<Modification> modifications;
@@ -31,7 +32,7 @@ public class Hero {
 			this.deck = new Deck();
 			this.discardPile = new DiscardPile();
 			this.burialPile = new BurialPile();
-			this.gearAndFeats = new GearAndFeats();
+			this.gearAndFeats = new HeroArea();
 			this.heroEnemies = new HeroEnemies();
 			this.modifications = new LinkedList<Modification>();
 		}
@@ -103,10 +104,10 @@ public class Hero {
 			this.hand = hand;
 		}
 		
-		public GearAndFeats getGearAndFeats() {
+		public HeroArea getGearAndFeats() {
 			return gearAndFeats;
 		}
-		public void setGearAndFeats(GearAndFeats gearAndFeats) {
+		public void setGearAndFeats(HeroArea gearAndFeats) {
 			this.gearAndFeats = gearAndFeats;
 		}
 		
@@ -117,14 +118,14 @@ public class Hero {
 			this.heroEnemies = heroEnemies;
 		}
 		
-		public LinkedList<GearKeyword> getGearProficiencies() {
+		public LinkedList<Keyword> getGearProficiencies() {
 			return gearProficiencies;
 		}
-		public void setGearProficiencies(LinkedList<GearKeyword> gearProficiencies) {
+		public void setGearProficiencies(LinkedList<Keyword> gearProficiencies) {
 			this.gearProficiencies = gearProficiencies;
 		}
 		
-		public void appendGearProficiencies(GearKeyword gt){
+		public void appendGearProficiencies(Keyword gt){
 			if(this.gearProficiencies != null){
 				this.gearProficiencies.add(gt);
 			}
@@ -166,48 +167,19 @@ public class Hero {
 			focus=Math.floorDiv(focus, 2);
 		}	
 
-		public String toString(){
-			String text = "";
-			
-			text = "Hero description : "+
-				   "\n"+getName()+
-				   "\nFokus :"+getFocus()+
-				   "\nRestauration : "+getRestoration();
-			
-			if(!deck.getCards().isEmpty()){
-				text += "\nIm Deck sind : "+deck.getCards().toString();
-			}
-			
-			if(!discardPile.getCards().isEmpty()){
-				text += "\nIm Discard Pile sind : "+discardPile.getCards().toString();
-			}
-			
-			if(!burialPile.getCards().isEmpty()){
-				text += "\nIm Burial Pile sind : "+burialPile.getCards().toString();
-			}
-						
-			if(!hand.getCards().isEmpty()){
-				text += "\nIn der Hand sind : "+hand.getCards().toString();
-			}
-			
-			if(!gearAndFeats.getCards().isEmpty()){
-				text += "\nIn Gear und Feats sind : "+gearAndFeats.getCards().toString();
-			}
-			
-			if(!heroEnemies.getCards().isEmpty()){
-				text += "\nFolgende Gegner liegen bei mir: "+heroEnemies.getCards().toString();
-			}
-			
-			if(!gearProficiencies.isEmpty()){
-				text += "\nIch kann folgendes benutzen: "+gearProficiencies.toString();
-			}
-			
-			return text;
-		}
-
+		
 
 		public LinkedList<Modification> getModifications() {
 			return modifications;
 		}
 
+
+		public int getRegularActionsLeft() {
+			return regularActionsLeft;
+		}
+
+
+		public void setRegularActionsLeft(int regularActionsLeft) {
+			this.regularActionsLeft = regularActionsLeft;
+		}
 }

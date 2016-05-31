@@ -3,6 +3,8 @@ package com.mygdx.game.mistfall.hero;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mygdx.game.mistfall.hero.cards.HeroCard;
+
 public class DiscardPile {
 private List<HeroCard> cards;
 	

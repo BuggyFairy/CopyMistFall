@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class BloodscorneVampire extends Enemy {
 
@@ -28,8 +28,8 @@ public class BloodscorneVampire extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		appendEnemyKeyword(EnemyKeyword.VAMPIRE);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.FLAME);
-		appendVunerability(EnemyVunerability.DIVINE);
+		appendVunerability(Keyword.FLAME);
+		appendVunerability(Keyword.DIVINE);
 		// Life values
 		getLife().setValueBase(4);
 		getLife().setValueMod(getLife().getValueBase());

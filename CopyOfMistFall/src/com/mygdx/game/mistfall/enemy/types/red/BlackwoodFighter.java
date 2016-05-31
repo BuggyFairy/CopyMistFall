@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class BlackwoodFighter extends Enemy {
 
@@ -28,7 +28,7 @@ public class BlackwoodFighter extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.BLUNT);
 		appendEnemyKeyword(EnemyKeyword.SLAVER);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.LIGHTNING);
+		appendVunerability(Keyword.LIGHTNING);
 		// Life values
 		getLife().setValueBase(3);
 		getLife().setValueMod(getLife().getValueBase());

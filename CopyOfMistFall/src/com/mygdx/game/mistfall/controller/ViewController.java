@@ -3,6 +3,7 @@ package com.mygdx.game.mistfall.controller;
 import java.util.List;
 
 import com.mygdx.game.mistfall.hero.Hero;
+import com.mygdx.game.mistfall.hero.cards.HeroCard;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.enums.PickControllerCharacters;
 
@@ -63,6 +64,10 @@ public class ViewController {
 		}
 		
 		return characterPosition;
+	}
+	public int pickHeroCard(List<HeroCard> cardsAvailable) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	

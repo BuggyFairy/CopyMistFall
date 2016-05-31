@@ -6,8 +6,8 @@ import java.util.Random;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.hero.HeroCard;
-import com.mygdx.game.mistfall.model.enums.CardArea;
+import com.mygdx.game.mistfall.hero.cards.HeroCard;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 
 public class CardController {
 
@@ -28,7 +28,7 @@ public class CardController {
 	 * 
 	 * Changes the position of a specified "card" of a specified "hero" from the "card" position to the specified "destination"
 	 */
-	public static boolean changeCardPosition(Hero hero, HeroCard card, CardArea dest, boolean topDeck){
+	public static boolean changeCardPosition(Hero hero, HeroCard card, HC_Area dest, boolean topDeck){
 		
 		boolean cardPositionChanged=false;
 		
@@ -38,30 +38,30 @@ public class CardController {
 				switch (dest)
 				{
 					case BURIAL:
-						card.setActualLocation(CardArea.BURIAL);
+						card.setActualLocation(HC_Area.BURIAL);
 						hero.getBurialPile().getCards().add(hero.getHand().getCards().get(hero.getHand().getCards().indexOf(card)));
 						cardPositionChanged=true;
 						
 					break;
 					case DISCARD:
-						card.setActualLocation(CardArea.DISCARD);
+						card.setActualLocation(HC_Area.DISCARD);
 						hero.getDiscardPile().getCards().add(hero.getHand().getCards().get(hero.getHand().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
 					case DECK:
 						if(topDeck == false){
 							hero.getDeck().getCards().add(hero.getHand().getCards().get(hero.getHand().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 						else{
 							hero.getDeck().getCards().add(0, hero.getHand().getCards().get(hero.getHand().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 					break;
-					case EQUIPMENT:
-						card.setActualLocation(CardArea.EQUIPMENT);
+					case HERO_AREA:
+						card.setActualLocation(HC_Area.HERO_AREA);
 						hero.getGearAndFeats().getCards().add(hero.getHand().getCards().get(hero.getHand().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
@@ -74,12 +74,12 @@ public class CardController {
 				switch (dest)
 				{
 					case HAND:
-						card.setActualLocation(CardArea.HAND);
+						card.setActualLocation(HC_Area.HAND);
 						hero.getHand().getCards().add(hero.getBurialPile().getCards().get(hero.getBurialPile().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
 					case DISCARD:
-						card.setActualLocation(CardArea.DISCARD);
+						card.setActualLocation(HC_Area.DISCARD);
 						hero.getDiscardPile().getCards().add(hero.getBurialPile().getCards().get(hero.getBurialPile().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
@@ -87,18 +87,18 @@ public class CardController {
 						
 						if(topDeck == false){
 							hero.getDeck().getCards().add(hero.getBurialPile().getCards().get(hero.getBurialPile().getCards().indexOf(card)));	
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 						else
 						{
 							hero.getDeck().getCards().add(0, hero.getBurialPile().getCards().get(hero.getBurialPile().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 					break;
-					case EQUIPMENT:
-						card.setActualLocation(CardArea.EQUIPMENT);
+					case HERO_AREA:
+						card.setActualLocation(HC_Area.HERO_AREA);
 						hero.getGearAndFeats().getCards().add(hero.getBurialPile().getCards().get(hero.getBurialPile().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
@@ -111,29 +111,29 @@ public class CardController {
 				switch (dest)
 				{
 					case BURIAL:
-						card.setActualLocation(CardArea.BURIAL);
+						card.setActualLocation(HC_Area.BURIAL);
 						hero.getBurialPile().getCards().add(hero.getDiscardPile().getCards().get(hero.getDiscardPile().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
 					case HAND:
-						card.setActualLocation(CardArea.HAND);
+						card.setActualLocation(HC_Area.HAND);
 						hero.getHand().getCards().add(hero.getDiscardPile().getCards().get(hero.getDiscardPile().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
 					case DECK:						
 						if(topDeck == false){
 							hero.getDeck().getCards().add(hero.getDiscardPile().getCards().get(hero.getDiscardPile().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 						else{
 							hero.getDeck().getCards().add(0, hero.getDiscardPile().getCards().get(hero.getDiscardPile().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 					break;
-					case EQUIPMENT:
-						card.setActualLocation(CardArea.EQUIPMENT);
+					case HERO_AREA:
+						card.setActualLocation(HC_Area.HERO_AREA);
 						hero.getGearAndFeats().getCards().add(hero.getDiscardPile().getCards().get(hero.getDiscardPile().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
@@ -146,22 +146,22 @@ public class CardController {
 				switch (dest)
 				{
 					case BURIAL:
-						card.setActualLocation(CardArea.BURIAL);
+						card.setActualLocation(HC_Area.BURIAL);
 						hero.getBurialPile().getCards().add(hero.getDeck().getCards().get(hero.getDeck().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
 					case DISCARD:
-						card.setActualLocation(CardArea.DISCARD);
+						card.setActualLocation(HC_Area.DISCARD);
 						hero.getDiscardPile().getCards().add(hero.getDeck().getCards().get(hero.getDeck().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
 					case HAND:
-						card.setActualLocation(CardArea.HAND);
+						card.setActualLocation(HC_Area.HAND);
 						hero.getHand().getCards().add(hero.getDeck().getCards().get(hero.getDeck().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
-					case EQUIPMENT:
-						card.setActualLocation(CardArea.EQUIPMENT);
+					case HERO_AREA:
+						card.setActualLocation(HC_Area.HERO_AREA);
 						hero.getGearAndFeats().getCards().add(hero.getDeck().getCards().get(hero.getDeck().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
@@ -174,29 +174,29 @@ public class CardController {
 				switch (dest)
 				{
 					case BURIAL:
-						card.setActualLocation(CardArea.BURIAL);
+						card.setActualLocation(HC_Area.BURIAL);
 						hero.getBurialPile().getCards().add(hero.getGearAndFeats().getCards().get(hero.getGearAndFeats().getCards().indexOf(card)));	
 						cardPositionChanged=true;
 					break;
 					case DISCARD:
-						card.setActualLocation(CardArea.DISCARD);
+						card.setActualLocation(HC_Area.DISCARD);
 						hero.getDiscardPile().getCards().add(hero.getGearAndFeats().getCards().get(hero.getGearAndFeats().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
 					case DECK:
 						if(topDeck == false){
 							hero.getDeck().getCards().add(hero.getGearAndFeats().getCards().get(hero.getGearAndFeats().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 						else{
 							hero.getDeck().getCards().add(0, hero.getGearAndFeats().getCards().get(hero.getGearAndFeats().getCards().indexOf(card)));
-							card.setActualLocation(CardArea.DECK);
+							card.setActualLocation(HC_Area.DECK);
 							cardPositionChanged=true;
 						}
 					break;
 					case HAND:
-						card.setActualLocation(CardArea.HAND);
+						card.setActualLocation(HC_Area.HAND);
 						hero.getHand().getCards().add(hero.getGearAndFeats().getCards().get(hero.getGearAndFeats().getCards().indexOf(card)));
 						cardPositionChanged=true;
 					break;
@@ -254,7 +254,7 @@ public class CardController {
 		// or their are no more cards in the Deck
 		while (handCountToLimit<hero.getDrawLimit() && hero.getDeck().getCards().isEmpty()==false){
 			// Draw Card
-			changeCardPosition(hero, hero.getDeck().getCards().get(0),CardArea.HAND, false);
+			changeCardPosition(hero, hero.getDeck().getCards().get(0),HC_Area.HAND, false);
 			// Update draw limit count
 			if (hero.getHand().getCards().get(hero.getHand().getCards().size()-1).getCountsAgainstDrawLimit()){
 				handCountToLimit++;

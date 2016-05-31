@@ -1,7 +1,8 @@
 package com.mygdx.game.mistfall.hero;
 
 import com.mygdx.game.mistfall.controller.CardController;
-import com.mygdx.game.mistfall.model.enums.CardArea;
+import com.mygdx.game.mistfall.hero.cards.HeroCard;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 
 public class Reflexes {
 
@@ -16,12 +17,12 @@ public class Reflexes {
 	 * Versatility
 	 * Preperation
 	 */
-	public static void reflexDrawCards(HeroCard playedCard, Hero hero, CardArea dest, int focusChange, int drawCount){
+	public static void reflexDrawCards(HeroCard playedCard, Hero hero, HC_Area dest, int focusChange, int drawCount){
 		
 		//draw card from the top of the deck
 		for(int i=0 ; i<drawCount ; i++){
 			if(!hero.getDeck().getCards().isEmpty()){
-				CardController.changeCardPosition(hero, hero.getDeck().getCards().get(0), CardArea.HAND, false);
+				CardController.changeCardPosition(hero, hero.getDeck().getCards().get(0), HC_Area.HAND, false);
 			}
 		}
 		//Move played card from source to dest after effect was resolved
@@ -45,12 +46,12 @@ public class Reflexes {
 	
 	//Arcane Wisdom
 	//Scroll of Wisdom
-	public static void reflexPickDiscardPile(HeroCard playedCard, Hero performer, CardArea dest, int drawCount){
+	public static void reflexPickDiscardPile(HeroCard playedCard, Hero performer, HC_Area dest, int drawCount){
 		HeroCard pickedCard;
 		for(int i=0 ; i<drawCount ; i++){
 			pickedCard = CardController.pickCard(performer, performer.getDiscardPile().getCards(), null, null, null, null);
 			CardController.changeCardPosition(performer, pickedCard, dest, false);
 		}
-		CardController.changeCardPosition(performer, playedCard, CardArea.BURIAL, false);
+		CardController.changeCardPosition(performer, playedCard, HC_Area.BURIAL, false);
 	}
 }

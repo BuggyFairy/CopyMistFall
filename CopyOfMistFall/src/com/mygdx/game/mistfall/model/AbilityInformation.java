@@ -1,26 +1,26 @@
 package com.mygdx.game.mistfall.model;
 
-import com.mygdx.game.mistfall.model.enums.AbilityType;
-import com.mygdx.game.mistfall.model.enums.CardArea;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_ActionType;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 
 public class AbilityInformation {
 	
-	private CardArea cardArea;
+	private HC_Area cardArea;
 	private int range;
-	private AbilityType abilityType;
+	private HC_ActionType abilityType;
 	
 	
-	public AbilityInformation(CardArea cardArea, int range, AbilityType abilityType){
+	public AbilityInformation(HC_Area cardArea, int range, HC_ActionType abilityType){
 		this.cardArea=cardArea;
 		this.range=range;
 		this.abilityType=abilityType;
 	}
 	
 	
-	public CardArea getCardArea() {
+	public HC_Area getCardArea() {
 		return cardArea;
 	}
-	public void setCardArea(CardArea cardArea) {
+	public void setCardArea(HC_Area cardArea) {
 		this.cardArea = cardArea;
 	}
 	public int getRange() {
@@ -29,10 +29,10 @@ public class AbilityInformation {
 	public void setRange(int range) {
 		this.range = range;
 	}
-	public AbilityType getAbilityType() {
+	public HC_ActionType getAbilityType() {
 		return abilityType;
 	}
-	public void setAbilityType(AbilityType abilityType) {
+	public void setAbilityType(HC_ActionType abilityType) {
 		this.abilityType = abilityType;
 	}
 	

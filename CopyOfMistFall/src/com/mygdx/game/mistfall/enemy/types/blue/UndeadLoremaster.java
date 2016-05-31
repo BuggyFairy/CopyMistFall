@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class UndeadLoremaster extends Enemy {
 
@@ -28,8 +28,8 @@ public class UndeadLoremaster extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.UNDEAD);
 		appendEnemyKeyword(EnemyKeyword.ZOMBIE);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.BLUNT);
-		appendVunerability(EnemyVunerability.FLAME);
+		appendVunerability(Keyword.BLUNT);
+		appendVunerability(Keyword.FLAME);
 		// Life values
 		getLife().setValueBase(3);
 		getLife().setValueMod(getLife().getValueBase());

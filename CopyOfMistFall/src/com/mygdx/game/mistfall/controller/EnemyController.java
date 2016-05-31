@@ -160,7 +160,9 @@ public class EnemyController {
 					// shuffle discard pile and form new deck if the deck is empty
 					if(gc.getGameSetupController().getBlueEnemies().isEmpty()){
 						gc.getGameSetupController().setBlueEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getBlueEnemiesDiscard()));
-						shuffleCount++;				
+						shuffleCount++;		
+						// Clear Discard
+						gc.getGameSetupController().getBlueEnemiesDiscard().clear();
 					}
 					// Draw enemy with any Keyword
 					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){
@@ -197,6 +199,8 @@ public class EnemyController {
 					if(gc.getGameSetupController().getRedEnemies().isEmpty()){
 						gc.getGameSetupController().setRedEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getRedEnemiesDiscard()));
 						shuffleCount++;
+						// Clear Discard
+						gc.getGameSetupController().getRedEnemiesDiscard().clear();
 					}
 					// Draw enemy with any Keyword
 					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){
@@ -233,6 +237,8 @@ public class EnemyController {
 					if(gc.getGameSetupController().getGreenEnemies().isEmpty()){
 						gc.getGameSetupController().setGreenEnemies((List<Enemy>)CardController.shuffleCards(gc.getGameSetupController().getGreenEnemiesDiscard()));
 						shuffleCount++;
+						// Clear Discard
+						gc.getGameSetupController().getGreenEnemiesDiscard().clear();
 					}
 					// Draw enemy with any Keyword
 					if(gc.getActiveEncounter().getEnemyKeyword() == EnemyKeyword.ANY){

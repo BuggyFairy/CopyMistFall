@@ -7,8 +7,8 @@ import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityArea;
 import com.mygdx.game.mistfall.enemy.enums.EnemyAbilityType;
 import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.enemy.enums.EnemySuit;
-import com.mygdx.game.mistfall.enemy.enums.EnemyVunerability;
 import com.mygdx.game.mistfall.model.enums.AttackType;
+import com.mygdx.game.mistfall.model.enums.Keyword;
 
 public class RenegadeFlamecaster extends Enemy {
 
@@ -29,7 +29,7 @@ public class RenegadeFlamecaster extends Enemy {
 		appendEnemyKeyword(EnemyKeyword.SORCERER);
 		appendEnemyKeyword(EnemyKeyword.RANGED);
 		// Vulnerabilities
-		appendVunerability(EnemyVunerability.DIVINE);
+		appendVunerability(Keyword.DIVINE);
 		// Life values
 		getLife().setValueBase(2);
 		getLife().setValueMod(getLife().getValueBase());

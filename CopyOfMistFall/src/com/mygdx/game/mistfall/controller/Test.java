@@ -1,7 +1,8 @@
 package com.mygdx.game.mistfall.controller;
 
 import com.mygdx.game.mistfall.hero.Hero;
-import com.mygdx.game.mistfall.hero.HeroCard;
+import com.mygdx.game.mistfall.hero.cards.HeroCard;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 import com.mygdx.game.mistfall.hero.characters.Arani.Arani;
 import com.mygdx.game.mistfall.hero.characters.Arani.cards.WayOfDawn;
 import com.mygdx.game.mistfall.hero.characters.Celenthia.Celenthia;
@@ -10,7 +11,6 @@ import com.mygdx.game.mistfall.hero.characters.ardenai.Ardenai;
 import com.mygdx.game.mistfall.hero.characters.crow.Crow;
 import com.mygdx.game.mistfall.hero.characters.fengray.Fengray;
 import com.mygdx.game.mistfall.hero.characters.venda.Venda;
-import com.mygdx.game.mistfall.model.enums.CardArea;
 
 public class Test {
 
@@ -33,18 +33,18 @@ public class Test {
 //		System.out.println("\n"+bp.toString());
 		
 		WayOfDawn wob1 = new WayOfDawn();
-		wob1.setActualLocation(CardArea.HAND);
+		wob1.setActualLocation(HC_Area.HAND);
 		WayOfDawn wob2 = new WayOfDawn();
-		wob2.setActualLocation(CardArea.HAND);
+		wob2.setActualLocation(HC_Area.HAND);
 		WayOfDawn wob3 = new WayOfDawn();
-		wob3.setActualLocation(CardArea.HAND);
+		wob3.setActualLocation(HC_Area.HAND);
 		
 		WayOfDawn wob4 = new WayOfDawn();
-		wob4.setActualLocation(CardArea.DECK);
+		wob4.setActualLocation(HC_Area.DECK);
 		WayOfDawn wob5 = new WayOfDawn();
-		wob5.setActualLocation(CardArea.DECK);
+		wob5.setActualLocation(HC_Area.DECK);
 		WayOfDawn wob6 = new WayOfDawn();
-		wob6.setActualLocation(CardArea.DECK);
+		wob6.setActualLocation(HC_Area.DECK);
 		
 		Hero hero = new Hero();
 
