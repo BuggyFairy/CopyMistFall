@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.hero.cards.enums.HC_AreaRestriction;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_IdentifierEnum;
 import com.mygdx.game.mistfall.hero.cards.enums.HC_Type;
 import com.mygdx.game.mistfall.model.enums.Keyword;
 
@@ -12,6 +13,7 @@ public class HeroCard {
 	// {{ Attributes
 	private String name;
 	private int ID;
+	private HC_IdentifierEnum cardEnum;
 	
 	private List<HC_Action> actions;
 	private List<Keyword> keywords;
@@ -101,6 +103,14 @@ public class HeroCard {
 
 	public void setDiscardValue(int discardValue) {
 		this.discardValue = discardValue;
+	}
+
+	public HC_IdentifierEnum getCardEnum() {
+		return cardEnum;
+	}
+
+	public void setCardEnum(HC_IdentifierEnum cardEnum) {
+		this.cardEnum = cardEnum;
 	}
 
 	// }}

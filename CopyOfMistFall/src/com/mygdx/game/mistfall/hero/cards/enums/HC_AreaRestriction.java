@@ -9,5 +9,6 @@ public enum HC_AreaRestriction {
 	E,
 	F,
 	G,
-	INF
+	INF,
+	HAND
 }

@@ -14,12 +14,7 @@ public class Encounter extends Card{
 	private EnemyKeyword enemyKeyword;
 	private List<LocationType> locationTypes;
 	
-	
-	
-	
-	
-	
-	
+
 	
 	public int getReinforcment() {
 		return reinforcment;

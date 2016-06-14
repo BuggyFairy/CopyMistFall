@@ -17,6 +17,8 @@ public class HC_ActionStructure3 {
 	public HC_ActionStructure3() {
 		discardedCardsCount = 0;
 		discardedCards = new LinkedList<HeroCard>();
+		impacts = new LinkedList<HC_ActionImpact>();
+		requirements = new LinkedList<HC_ActionRequirement>();
 	}
 	// }}
 

@@ -1,5 +1,6 @@
 package com.mygdx.game.mistfall.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.mygdx.game.mistfall.hero.Hero;
@@ -7,35 +8,124 @@ import com.mygdx.game.mistfall.model.Encounter;
 import com.mygdx.game.mistfall.model.Location;
 import com.mygdx.game.mistfall.model.QuestArea;
 import com.mygdx.game.mistfall.model.QuestCharter;
-import com.mygdx.game.mistfall.model.enums.GamePhase;
 
 public class GameController {
 
-	
+	// {{ Attributes
 	private List<Hero> heroes;
-	private boolean travelPhaseCompleted;
 	private QuestArea questArea;
 	private Encounter activeEncounter;
+	
 	private TurnController turnController;
 	private GameSetupController gameSetupController;
+	private HeroCardController heroCardController;
+	
+	
+
+
 	private QuestCharter questCharter;
 	private ViewController viewController;
 	private EnemyController enemyController;
 	
 	private int activeHero;
 	private Location activeLovation;
-	private GamePhase currentGamePhase;
+	private GamePhase gamePhase;
 	
+	// }}
 	
-	
-	
-	
+	// {{ Constructor
 	public GameController(){
-		
+		questArea = new QuestArea();
+		enemyController = new EnemyController();
+		gameSetupController = new GameSetupController(this);
+		heroCardController = new HeroCardController();
+		heroes = new LinkedList<Hero>();
+		setActiveHero(-1);
+		setGamePhase(new GamePhase());
 	}
 	
+	// }}
 
-		
+	// {{ Getters & Setters
+	public List<Hero> getHeroes() {
+		return heroes;
+	}
+	public void setHeroes(List<Hero> heroes) {
+		this.heroes = heroes;
+	}
+	public int getActiveHero() {
+		return activeHero;
+	}
+	public void setActiveHero(int activeHero) {
+		this.activeHero = activeHero;
+	}
+	
+	public HeroCardController getHeroCardController() {
+		return heroCardController;
+	}
+
+	public void setHeroCardController(HeroCardController heroCardController) {
+		this.heroCardController = heroCardController;
+	}
+	
+	public QuestArea getQuestArea() {
+		return questArea;
+	}
+	public void setQuestArea(QuestArea questArea) {
+		this.questArea = questArea;
+	}
+	public Encounter getActiveEncounter() {
+		return activeEncounter;
+	}
+	public void setActiveEncounter(Encounter activeEncounter) {
+		this.activeEncounter = activeEncounter;
+	}
+	public TurnController getTurnController() {
+		return turnController;
+	}
+	public void setTurnController(TurnController turnController) {
+		this.turnController = turnController;
+	}
+	public GameSetupController getGameSetupController() {
+		return gameSetupController;
+	}
+	public void setGameSetupController(GameSetupController gameSetupController) {
+		this.gameSetupController = gameSetupController;
+	}
+	public Location getActiveLovation() {
+		return activeLovation;
+	}
+	public void setActiveLovation(Location activeLovation) {
+		this.activeLovation = activeLovation;
+	}
+	public QuestCharter getQuestCharter() {
+		return questCharter;
+	}
+	public void setQuestCharter(QuestCharter questCharter) {
+		this.questCharter = questCharter;
+	}
+	public ViewController getViewController() {
+		return viewController;
+	}
+	public void setViewController(ViewController viewController) {
+		this.viewController = viewController;
+	}
+	public EnemyController getEnemyController() {
+		return enemyController;
+	}
+	public void setEnemyController(EnemyController enemyController) {
+		this.enemyController = enemyController;
+	}
+	public GamePhase getGamePhase() {
+		return gamePhase;
+	}
+
+	public void setGamePhase(GamePhase gamePhase) {
+		this.gamePhase = gamePhase;
+	}
+	// }}
+	
+	// {{ Other Methods
 	public void moveTimeTrack(int count){
 		for (int i=0;i<Math.abs(count);i++){
 			if (count>0){
@@ -90,153 +180,10 @@ public class GameController {
 
 
 
+	// }}
+	
 
-	public List<Hero> getHeroes() {
-		return heroes;
-	}
 
 
-
-
-	public void setHeroes(List<Hero> heroes) {
-		this.heroes = heroes;
-	}
-
-
-
-
-	public int getActiveHero() {
-		return activeHero;
-	}
-
-
-
-
-	public void setActiveHero(int activeHero) {
-		this.activeHero = activeHero;
-	}
-
-
-
-
-	public QuestArea getQuestArea() {
-		return questArea;
-	}
-
-
-
-
-	public void setQuestArea(QuestArea questArea) {
-		this.questArea = questArea;
-	}
-
-
-
-
-	public Encounter getActiveEncounter() {
-		return activeEncounter;
-	}
-
-
-
-
-	public void setActiveEncounter(Encounter activeEncounter) {
-		this.activeEncounter = activeEncounter;
-	}
-
-
-
-
-	public TurnController getTurnController() {
-		return turnController;
-	}
-
-
-
-
-	public void setTurnController(TurnController turnController) {
-		this.turnController = turnController;
-	}
-
-
-
-
-	public GameSetupController getGameSetupController() {
-		return gameSetupController;
-	}
-
-
-
-
-	public void setGameSetupController(GameSetupController gameSetupController) {
-		this.gameSetupController = gameSetupController;
-	}
-
-
-
-
-	public Location getActiveLovation() {
-		return activeLovation;
-	}
-
-
-
-
-	public void setActiveLovation(Location activeLovation) {
-		this.activeLovation = activeLovation;
-	}
-
-	public QuestCharter getQuestCharter() {
-		return questCharter;
-	}
-
-	public void setQuestCharter(QuestCharter questCharter) {
-		this.questCharter = questCharter;
-	}
-
-
-
-	public ViewController getViewController() {
-		return viewController;
-	}
-
-
-
-	public void setViewController(ViewController viewController) {
-		this.viewController = viewController;
-	}
-
-
-
-	public boolean isTravelPhaseCompleted() {
-		return travelPhaseCompleted;
-	}
-
-
-
-	public void setTravelPhaseCompleted(boolean travelPhaseCompleted) {
-		this.travelPhaseCompleted = travelPhaseCompleted;
-	}
-
-	public EnemyController getEnemyController() {
-		return enemyController;
-	}
-
-
-
-	public void setEnemyController(EnemyController enemyController) {
-		this.enemyController = enemyController;
-	}
-
-
-
-	public GamePhase getCurrentGamePhase() {
-		return currentGamePhase;
-	}
-
-
-
-	public void setCurrentGamePhase(GamePhase currentGamePhase) {
-		this.currentGamePhase = currentGamePhase;
-	}	
+	
 }

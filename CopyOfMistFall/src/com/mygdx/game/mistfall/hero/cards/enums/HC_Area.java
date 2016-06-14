@@ -7,6 +7,7 @@ public enum HC_Area {
 	DISCARD,
 	HERO_AREA,
 	DECK,
+	ADVANCED_FEAT,
 	NONE,
 	ANY
 	

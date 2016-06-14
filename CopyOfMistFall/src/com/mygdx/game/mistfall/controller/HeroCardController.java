@@ -1,9 +1,10 @@
 package com.mygdx.game.mistfall.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mygdx.game.mistfall.enemy.Enemy;
-import com.mygdx.game.mistfall.enemy.enums.EnemyKeyword;
 import com.mygdx.game.mistfall.hero.Hero;
 import com.mygdx.game.mistfall.hero.cards.CurrentAction;
 import com.mygdx.game.mistfall.hero.cards.EnemyTarget;
@@ -11,12 +12,12 @@ import com.mygdx.game.mistfall.hero.cards.HC_Action;
 import com.mygdx.game.mistfall.hero.cards.HC_ActionFolder;
 import com.mygdx.game.mistfall.hero.cards.HC_ActionRequirement;
 import com.mygdx.game.mistfall.hero.cards.HC_ActionStructure2;
-import com.mygdx.game.mistfall.hero.cards.HC_ActionStructure3;
 import com.mygdx.game.mistfall.hero.cards.HeroCard;
 import com.mygdx.game.mistfall.hero.cards.enums.HC_ActionType;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 import com.mygdx.game.mistfall.hero.cards.enums.actionCourse.HC_ActionEffectTarget;
 import com.mygdx.game.mistfall.hero.cards.enums.actionCourse.HC_ActionRequirementKeyword;
-import com.mygdx.game.mistfall.model.enums.GamePhase;
+import com.mygdx.game.mistfall.model.enums.GamePhaseType;
 import com.mygdx.game.mistfall.model.enums.Keyword;
 import com.mygdx.game.mistfall.model.modifications.ModType;
 import com.mygdx.game.mistfall.model.modifications.Modification;
@@ -30,22 +31,41 @@ public class HeroCardController {
 	
 	private CurrentAction currentAction;
 	private boolean applyShit;
-	private int errorCode;
+	private Map<Integer,String> errorCodeString;
 	
 	private List<HeroCard> tempList;
 	
 	
 	// {{ Getters and Setters
-	public int getErrorCode() {
-		return errorCode;
+	public Map<Integer,String> getErrorCodeString() {
+		return errorCodeString;
 	}
-	public void setErrorCode(int errorCode) {
-		this.errorCode = errorCode;
+	public void setErrorCodeString(Map<Integer,String> errorCodeString) {
+		this.errorCodeString = errorCodeString;
 	}
 	// }}
 	
+	// {{ Constructor
+	public HeroCardController() {
+		
+		errorCodeString = new HashMap<Integer,String>();
+		errorCodeString.put(1, "The action is not a valid source action.");
+		errorCodeString.put(5, "Action must be played from the Hero Area");
+		errorCodeString.put(6, "Action must be played from the Hand");
+		errorCodeString.put(11, "Only playable in the Hero Phase.");
+		errorCodeString.put(12, "Only playable in your Hero Turn.");
+		errorCodeString.put(13, "No more Regular Actions left.");
+		errorCodeString.put(101, "Not enough Space in the Hero Area.");
+	}
+	// }}
 	
+	// {{ Initialize
 	
+	public void initialize(GameController gc){
+		currentAction = new CurrentAction(gc);
+	}
+	
+	// }}
 	
 	// {{ Source Action
 	
@@ -56,49 +76,14 @@ public class HeroCardController {
 		
 		for (Hero hero : gc.getHeroes()){
 			// Check Hero Area
-			for (HeroCard HC : hero.getGearAndFeats().getA()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getB()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getC()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getD()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getE()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getF()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getG()){
-				for (HC_Action action : HC.getActions()){
-					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
-				}
-			}
-			for (HeroCard HC : hero.getGearAndFeats().getInf()){
+			for (HeroCard HC : hero.getHeroArea()){
 				for (HC_Action action : HC.getActions()){
 					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
 				}
 			}
 			
 			// Check Hand
-			for (HeroCard HC : hero.getHand().getCards()){
+			for (HeroCard HC : hero.getHand()){
 				for (HC_Action action : HC.getActions()){
 					action.setErrorCode(actionPlayabilitySource(gc, hero, HC, action));
 				}
@@ -107,26 +92,43 @@ public class HeroCardController {
 		
 	}
 	
+
+
 	/**
 	 * Saves the chosen action as the current source action.
 	 * Action playability must be checked beforehand.
+	 * Returns true if the source action is carried out immediately
 	 */
-	public void sourceActionChosen(GameController gc, Hero hero, HeroCard heroCardChosen, HC_Action actionChosen){
+	public boolean sourceActionChosen(GameController gc, Hero hero, HeroCard heroCardChosen, HC_Action actionChosen, HC_Area area){
+		
 		// 1. Add action to the current action structure
-		addAction(gc, hero, heroCardChosen, actionChosen);
+		currentAction.getMainAction().setAction(heroCardChosen, actionChosen, hero,area);
 		// 2. Refresh enemy targets
-		refreshTargets();
+		refreshCurrentAction();
+		// 3. Check for instant Confirm (Action with no choices and no Requirements must not be confirmed)
+		for (HC_ActionStructure2 option : actionChosen.getOptions()){
+			if (option.getChoices().size()>1){
+				return false;
+			}
+			if (option.getChoiceChosen().getRequirements().isEmpty()==false){
+				return false;
+			}
+		}
+		
+
+		sourceActionConfirm(gc);
+		
+		return true;
 	}
 
 	/**
 	 * Carries out the current action.
 	 * If the action can be carried out must be checked beforehand.
 	 */
-	public void sourceActionConfirm(){
-		// 1. Carry out current action
-		carryOutCurentAction();
-		// 2. Clear current action
-		currentAction.clear();
+	public void sourceActionConfirm(GameController gc){
+
+		carryOutCurentAction(gc);
+
 	}
 	
 	/**
@@ -239,7 +241,18 @@ public class HeroCardController {
 	
 	// {{ Enemy Target
 	
-	public void EnemyTargetChoose(GameController gc, Hero sourceHero, HC_ActionEffectTarget enemyTarget){
+	/**
+	 * Updates the Target range for all enemy card
+	 */
+	public void EnemyTargetChoose(GameController gc, Hero sourceHero, HC_ActionEffectTarget enemyTargetKeyword){
+		// Get Range of Current Action
+		int range=0;
+		for (EnemyTarget target : currentAction.getTargetStats()){
+			if (target.getTargetKeyword()==enemyTargetKeyword){
+				range = target.getRange();
+				break;
+			}
+		}
 		
 		// Set Target Range for all Hero Enemies
 		for (Hero hero : gc.getHeroes()){
@@ -257,6 +270,13 @@ public class HeroCardController {
 						break;
 					}
 				}
+				// Check if in Range
+				if(enemy.getTargetRange()<=range){
+					enemy.setInRange(true);
+				}
+				else{
+					enemy.setInRange(false);
+				}
 			}
 		}
 		
@@ -270,18 +290,15 @@ public class HeroCardController {
 					break;
 				}
 			}
+			// Check if in Range
+			if(enemy.getTargetRange()<=range){
+				enemy.setInRange(true);
+			}
+			else{
+				enemy.setInRange(false);
+			}
 		}
-		switch (enemyTarget){
-			case MAIN_ENEMY:
-				
-			break;
-			
-			case SECOND_ENEMY:
-			break;
-			
-			default:
-			break;
-		}
+		
 	}
 	
 	// WIE BEI DISCARDED MACHEN MIT SELECET UND SELECTED ATTRIBUT BEI ENEMIES
@@ -323,7 +340,7 @@ public class HeroCardController {
 		}
 		
 		// Update Stats
-		refreshTargets();
+		refreshCurrentAction();
 	}
 	
 	public void EnemyTargetCancel(){
@@ -336,47 +353,6 @@ public class HeroCardController {
 	
 	
 	
-	
-	
-	
-
-	
-	
-	/**
-	 * adds action to the current action structure
-	 */
-	private void addAction(GameController gc, Hero hero, HeroCard heroCardChosen, HC_Action actionChosen){
-		switch (actionChosen.getActionKeyword1()){
-		
-			case INTERACT_WITH_ENEMY:
-				switch(actionChosen.getActionKeyword2()){		
-					case MODIFY_ACTION:
-						currentAction.getModAction().add(new HC_ActionFolder());
-						currentAction.getModAction().get(currentAction.getModAction().size()-1).setAction(heroCardChosen, actionChosen, hero);
-					break;
-					default:
-						currentAction.getMainAction().setAction(heroCardChosen, actionChosen, hero);
-					break;				
-				}
-			break;
-			default:
-				currentAction.getMainAction().setAction(heroCardChosen, actionChosen, hero);
-			break;		
-		}
-	}
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 	
 	
 	
@@ -397,9 +373,18 @@ public class HeroCardController {
 		}
 		// }}
 		
-		// {{ 2. Check if the action is playable based on it's action type
+		// {{ 2. Check if the action is in the right Hero Area
+		if (hero.getHand().contains(HC)&& action.getCardArea()!=HC_Area.HAND){
+			return 5; // Must be played from the Hero Area
+		}
+		if (hero.getHeroArea().contains(HC)&& action.getCardArea()!=HC_Area.HERO_AREA){
+			return 6; // Must be played from the Hand
+		}
+		// }}
+		
+		// {{ 3. Check if the action is playable based on it's action type
 		if (action.getType()==HC_ActionType.FAST || action.getType()==HC_ActionType.REGULAR){
-			if (gc.getCurrentGamePhase()!=GamePhase.HERO_PHASE ){
+			if (gc.getGamePhase().getType()!=GamePhaseType.HERO_PHASE ){
 				return 11; // Not in the Hero Phase
 			}
 			if(gc.getActiveHero()!=hero.getHeroID()){
@@ -411,42 +396,18 @@ public class HeroCardController {
 		}
 		// }}
 		
-		// {{ 3. Check if the action is playable based on the Action Keywords
+		// {{ 4. Check if the action is playable based on the Action Keywords
 		switch (action.getActionKeyword1()){		
-			case PLACE_HERO_AREA:
-				switch (HC.getAreaRestriction()){
-					case A:
-						if (hero.getGearAndFeats().getA().size()>=hero.getGearAndFeats().getA_max()){
-							return 101; // Not enough space in Area A
+			case MOVE_CARD:
+				switch (action.getActionKeyword2()){
+					case PLACE_HERO_AREA:
+						if (hero.spaceInHeroArea(HC.getAreaRestriction())==false){
+							return 101; // Not enough space in the Hero Area.
 						}
-					case B:
-						if (hero.getGearAndFeats().getB().size()>=hero.getGearAndFeats().getB_max()){
-							return 102; // Not enough space in Area B
-						}
-					case C:
-						if (hero.getGearAndFeats().getC().size()>=hero.getGearAndFeats().getC_max()){
-							return 103; // Not enough space in Area C
-						}
-					case D:
-						if (hero.getGearAndFeats().getD().size()>=hero.getGearAndFeats().getD_max()){
-							return 104; // Not enough space in Area D
-						}
-					case E:
-						if (hero.getGearAndFeats().getE().size()>=hero.getGearAndFeats().getE_max()){
-							return 105; // Not enough space in Area E
-						}
-					case F:
-						if (hero.getGearAndFeats().getF().size()>=hero.getGearAndFeats().getF_max()){
-							return 106; // Not enough space in Area F
-						}
-					case G:
-						if (hero.getGearAndFeats().getG().size()>=hero.getGearAndFeats().getG_max()){
-							return 107; // Not enough space in Area G
-						}
-
-					default:
 					break;
-				}			
+					default:
+				}
+				
 			break;
 			
 			default:
@@ -466,90 +427,158 @@ public class HeroCardController {
 	
 	
 	
-	private void refreshTargets(){
+	private void refreshCurrentAction(){
 		
-		// TODO: set "allConditionsMet" in "currentAction"
+		// Exit if there is no source Action
+		if (currentAction.getMainAction().getAction()==null){
+			return;
+		}
 		
-		// Clear Targets
-		currentAction.getTargetStats().clear();
-		//
-		if (currentAction.getMainAction().actionExistent()){
+		// {{ Check Requirements from all active Actions an set conditions met
 			
-			course = currentAction.getMainAction().getAction().getCourse().get(currentAction.getMainAction().getAction().getPosInCourse());
+			currentAction.setAllConditionsMet(true);
+			boolean conditionsMet;
+			HC_ActionFolder actionFolder;
 			
-			switch (course.getActionKeyword1()){
-				case INTERACT_WITH_ENEMY:
-					
-					// Go Through all parallel under-actions of the action and check Requirements
-					applyShit=true;
-					for (int i=0; i<course.getOptions().size();i++){
-						if(course.getOptions().get(i).getChoiceChosen()>-1){
-							if(checkRequirements(course.getOptions().get(i).getChoices().get(course.getOptions().get(i).getChoiceChosen()))==true){
-								course.getOptions().get(i).setConditionsMet(true);
-							}
-							else{
-								course.getOptions().get(i).setConditionsMet(false);
-								if (course.getOptions().get(i).isNecessity()==true){
-									applyShit=false;
+			int actionCount = 1+currentAction.getModAction().size();	
+			if (currentAction.getResolvedAction().getAction()!=null){
+				actionCount++;
+			}
+
+			for (int i=0; i<actionCount; i++){
+				
+				// Set Action Folder
+				if (i==0){
+					actionFolder=currentAction.getMainAction();
+				}
+				else if(i==actionCount-1 && currentAction.getResolvedAction().getAction()!=null){
+					actionFolder=currentAction.getResolvedAction();
+				}
+				else{
+					actionFolder=currentAction.getModAction().get(i-1);
+				}
+				
+				// Check Requirements for the current Action Folder
+				for (HC_ActionStructure2 option : actionFolder.getAction().getOptions()){
+					option.setConditionsMet(true);
+					for (HC_ActionRequirement requirement : option.getChoiceChosen().getRequirements()){
+						
+						conditionsMet=false;
+						
+						switch (requirement.getRequirement()){
+							case DISCARD:
+							case DISCARD_UP_TO:
+								for (HeroCard card : option.getChoiceChosen().getDiscardedCards()){
+									for (Keyword keyword : requirement.getKeyword_HC()){
+										if (card.getKeywords().contains(keyword)){
+											conditionsMet=true;
+											break;
+										}
+									}
 								}
-							}
-						}
-						else{
-							applyShit=false;
-						}
-					}
-					
-					
-					// Apply Effects of under-actions to targets if all requirements of necessary options have been met
-					if(applyShit==true){
-						for (int i=0; i<course.getOptions().size();i++){
-							if(course.getOptions().get(i).getChoiceChosen()>-1){
-								carryOutCurentAction(course.getOptions().get(i).getChoices().get(course.getOptions().get(i).getChoiceChosen()),currentAction.getMainAction().getHero());
-							}
-						}
-					}
-					
-					
-					
-					// Check If Chosen Enemies are in Range
-					for (int i=0; i<currentAction.getTargetStats().size();i++){
-						if (currentAction.getTargetStats().get(i).isEnemyChosen()==true){
-							if(currentAction.getTargetStats().get(i).getEnemy().getTargetRange()<=currentAction.getTargetStats().get(i).getRange()){
+							break;
+							
+							case CARD_IN:
 								
-							}
-							else{
-								// Enemy not in Range
-							}
+								for (HeroCard card : actionFolder.getHero().getSpecificArea(requirement.getArea())){
+									for (Keyword keyword : requirement.getKeyword_HC()){
+										if (card.getKeywords().contains(keyword)){
+											conditionsMet=true;
+											break;
+										}
+									}
+								}
+								
+							break;
+							default:
+						}
+						
+						if (conditionsMet==false){
+							option.setConditionsMet(false);
+							break;
 						}
 					}
 					
-				break;
-				default:
-				break;
+					if (option.isNecessity()==true){
+						currentAction.setAllConditionsMet(false);
+					}
+				}
 			}
-		}
+			
+			
+		
+		// }}
+		
+		// {{ Update Impacts
+			// Clear Targets
+			currentAction.getTargetStats().clear();
+			//
+//			if (currentAction.getMainAction().actionExistent()){
+//				
+//				course = currentAction.getMainAction().getAction().getCourse().get(currentAction.getMainAction().getAction().getPosInCourse());
+//				
+//				switch (course.getActionKeyword1()){
+//					case INTERACT_WITH_ENEMY:
+//						
+//						// Go Through all parallel under-actions of the action and check Requirements
+//						applyShit=true;
+//						for (int i=0; i<course.getOptions().size();i++){
+//							if(course.getOptions().get(i).getChoiceChosen()>-1){
+//								if(checkRequirements(course.getOptions().get(i).getChoices().get(course.getOptions().get(i).getChoiceChosen()))==true){
+//									course.getOptions().get(i).setConditionsMet(true);
+//								}
+//								else{
+//									course.getOptions().get(i).setConditionsMet(false);
+//									if (course.getOptions().get(i).isNecessity()==true){
+//										applyShit=false;
+//									}
+//								}
+//							}
+//							else{
+//								applyShit=false;
+//							}
+//						}
+//						
+//						
+//						// Apply Effects of under-actions to targets if all requirements of necessary options have been met
+//						if(applyShit==true){
+//							for (int i=0; i<course.getOptions().size();i++){
+//								if(course.getOptions().get(i).getChoiceChosen()>-1){
+//									carryOutCurentAction(course.getOptions().get(i).getChoices().get(course.getOptions().get(i).getChoiceChosen()),currentAction.getMainAction().getHero());
+//								}
+//							}
+//						}
+//						
+//						
+//						
+//						// Check If Chosen Enemies are in Range
+//						for (int i=0; i<currentAction.getTargetStats().size();i++){
+//							if (currentAction.getTargetStats().get(i).isEnemyChosen()==true){
+//								if(currentAction.getTargetStats().get(i).getEnemy().getTargetRange()<=currentAction.getTargetStats().get(i).getRange()){
+//									
+//								}
+//								else{
+//									// Enemy not in Range
+//								}
+//							}
+//						}
+//						
+//					break;
+//					default:
+//					break;
+//				}
+//			}
+		// }}
 		
 	}
 	
 	
-	
-	private boolean checkRequirements(HC_ActionStructure3 choice){
-		for (int i=0; i<choice.getRequirements().size();i++){
-			switch (choice.getRequirements().get(i).getRequirement()){
-				case CARD_IN:
-				break;
-				default:
-				break;
-			}
-		}
-		return true;
-	}
-	
-	
-	private void carryOutCurentAction(){
+	private void carryOutCurentAction(GameController gc){
+		
+		HC_ActionFolder actionFolder = currentAction.getMainAction();
 		
 		// Carry out action 
-		switch (currentAction.getMainAction().getAction().getActionKeyword1()){
+		switch (actionFolder.getAction().getActionKeyword1()){
 		
 			case INTERACT_WITH_ENEMY:
 				for (EnemyTarget ET : currentAction.getTargetStats()){
@@ -579,7 +608,15 @@ public class HeroCardController {
 				}
 			break;
 			
-			case PLACE_HERO_AREA:
+			case MOVE_CARD:
+				
+				switch (actionFolder.getAction().getActionKeyword2()){
+					case PLACE_HERO_AREA:
+						// Move Card
+						moveHeroCard(gc,actionFolder.getHero(),actionFolder.getCard(),actionFolder.getArea(),HC_Area.HERO_AREA);				
+					break;
+					default:
+				}
 				
 			break;
 			
@@ -587,12 +624,60 @@ public class HeroCardController {
 			break;
 		}
 		
+		// Apply Focus
+		for (int i = 0; i<gc.getHeroes().size();i++){
+			gc.getHeroes().get(i).focusChange(gc, currentAction.getGeneratedHeroFocus().get(i));
+		}
+		
 		// Discard Card
 		
-		
+		// Clear Current Action
+		currentAction.clear();
 	}
 	
 	
+	/**
+	 * Moves a Hero Card from one location to another.
+	 * All Hero Card movements should be done with this method
+	 */
+	private void moveHeroCard(GameController gc, Hero hero, HeroCard card, HC_Area source, HC_Area target){
+		// Move Card if possible
+		if (hero.getSpecificArea(source).contains(card)==true){
+			hero.getSpecificArea(target).add(card);
+			hero.getSpecificArea(source).remove(card);
+		}
+		else{
+			System.out.println("Card Movement not possible. Card not found in the Specified Source Area");
+		}
+		// Sort Hand and Hero Area
+		boolean sorted=false;
+		while(sorted==false){
+			sorted=true;
+			for (int i=0; i<hero.getHeroArea().size()-1;i++){
+				if (hero.getHeroArea().get(i+1).getAreaRestriction().ordinal()<hero.getHeroArea().get(i).getAreaRestriction().ordinal()){
+					hero.getHeroArea().add(i, hero.getHeroArea().get(i+1));
+					hero.getHeroArea().remove(i+2);
+					sorted=false;
+				}
+				else if(hero.getHeroArea().get(i+1).getAreaRestriction().ordinal()==hero.getHeroArea().get(i).getAreaRestriction().ordinal() &&
+						hero.getHeroArea().get(i+1).getName().compareTo(hero.getHeroArea().get(i).getName())<0){
+					hero.getHeroArea().add(i, hero.getHeroArea().get(i+1));
+					hero.getHeroArea().remove(i+2);
+					sorted=false;
+				}
+			}
+		}
+		
+	}
+
+	public void drawCard(GameController gc, Hero hero){
+		if (hero.getDeck().isEmpty()==false){
+			moveHeroCard(gc, hero, hero.getDeck().get(0), HC_Area.DECK, HC_Area.HAND);
+		}
+	}
 	
+	public void discardCard(GameController gc, Hero hero, HeroCard card, HC_Area source){
+		moveHeroCard(gc, hero, card, source, HC_Area.DISCARD);
+	}
 	
 }

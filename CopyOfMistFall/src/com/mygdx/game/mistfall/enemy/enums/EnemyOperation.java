@@ -6,6 +6,7 @@ public enum EnemyOperation {
 	DISPERSE,
 	PURSUIT,
 	DEFEATED,
-	MOVE
+	MOVE,
+	DISCARD
 
 }

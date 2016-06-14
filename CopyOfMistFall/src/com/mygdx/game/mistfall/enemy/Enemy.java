@@ -32,6 +32,7 @@ public class Enemy  {
 	private LifeValues life;
 	
 	private int targetRange;
+	private boolean inRange;
 	
 	private boolean enraged;
 	
@@ -39,6 +40,7 @@ public class Enemy  {
 	private LinkedList<Modification> modifications;
 	
 	private boolean selected;
+	
 	// }}
 	
 	// {{ Constructor
@@ -158,6 +160,14 @@ public class Enemy  {
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
+	public boolean isInRange() {
+		return inRange;
+	}
+
+	public void setInRange(boolean inRange) {
+		this.inRange = inRange;
+	}
+
 
 	// }}
 
@@ -411,6 +421,61 @@ public class Enemy  {
 		
 	}
 
+	public String getEnrageString(){
+		
+		switch (enemyType){
+			case RENEGADE_FLAMECASTER:
+				return "<Enrage> +1<Magical Resistance>.";
+			case BLACKWOOD_FIGHTER:
+				return "<Enrage> +1<Physical Resistance> and +1<Magical Resistance>.";
+			case BLACKWOOD_AMBUSHER:
+			case BLACKWOOD_ASSASSIN:
+			case BONESORROW_SHOOTER:
+			case BONESORROW_WARRIOR:
+			case DIRE_WOLF:
+			case TRACKER_HOUND:
+				return "<Enrage> Deals +1<Physical Damage>.";
+			case TWISTED_CURSEBEARER:
+			case BLACKWOOD_CHANGELING:
+			case BLOODSCORNE_VAMPIRE:
+				return "<Enrage> Deals +1<Magical Damage>.";
+			case CURSED_WALKER:
+			case ICE_REAVER:
+				return "<Enrage> Ignore Slow.";
+			case BLACK_COVEN_CASTER:
+			case GHOREN_RAGECALLER:
+			case GHOREN_SMALLHORN:
+			case GHOREN_WARRIOR:
+			case RAVENOUS_DRAUGR:
+			case VAMPIRE_BAT_SWARM:
+			case WILD_ICEHOUND:
+				return "<Enrage> Attack. <Calm>";
+			case UNDEAD_LOREMASTER:
+				return "<Enrage> Removes all Wounds from this Enemy. <Calm>";
+			case GHOREN_SLINGER:
+			case GHOREN_BLOOD_TRACKER:
+				return "<Enrage> Remove 1<Wound Token>. <Calm>";
+			case BONESORROW_MAGUS:
+				return "<Enrage> Remove 1<Wound Token> from all UNDEAD in same Area. <Calm>";
+			case WILDLANDS_SHAMAN:
+				return "<Enrage> Discard 1 Card. <Calm>";
+			case BLACKWOOD_CUTTPURSE:
+				return "<Enrage> Apply Thievery effect if a card was Buried. <Calm>";
+			case BLACKWOOD_HARASSER:
+				return "<Enrage> Apply Skulduggery effect if a card was Buried. <Calm>";
+			case BLACKWOOD_MAGEHUNTER:
+				return "<Enrage> Apply Mana Drain effect if a card was Buried. <Calm>";
+			case TWISTED_LASHER:
+				return "<Enrage> Activate the Flailing ability. <Calm>";
+			case FELLSTALKER:
+				return "<Enrage> Activate the Scavenger ability. <Calm>";
+			case VENGEFUL_BANSHEE:
+				return "<Enrage> Activate Vengeful Shriek. <Calm>";
+			
+			default:	
+				return "";
+		}
+	}
 	// }}
 	
 }

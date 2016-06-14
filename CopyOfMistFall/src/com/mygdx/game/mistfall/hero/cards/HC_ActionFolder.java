@@ -1,22 +1,25 @@
 package com.mygdx.game.mistfall.hero.cards;
 
 import com.mygdx.game.mistfall.hero.Hero;
+import com.mygdx.game.mistfall.hero.cards.enums.HC_Area;
 
 public class HC_ActionFolder {
 	
 	private HeroCard card;
 	private HC_Action action;
 	private Hero hero;
+	private HC_Area area;
 	
 	
 	
 	
 	
 	
-	public void setAction(HeroCard card, HC_Action action, Hero hero){
+	public void setAction(HeroCard card, HC_Action action, Hero hero, HC_Area area){
 		this.card=card;
 		this.action=action;
 		this.hero=hero;
+		this.setArea(area);
 	}
 	
 	public void removeAction (){
@@ -47,5 +50,13 @@ public class HC_ActionFolder {
 
 	public void setHero(Hero hero) {
 		this.hero = hero;
+	}
+
+	public HC_Area getArea() {
+		return area;
+	}
+
+	public void setArea(HC_Area area) {
+		this.area = area;
 	}
 }
